@@ -39,6 +39,14 @@ export type TEndpointUserList = {
 };
 
 export type TSignInRequestBody = {
-  name: string,
-  password: string,
-}
+  name: string;
+  password: string;
+};
+
+export type TFeedbackType = "error" | "warning" | "success" | "info";
+
+export type TUserSignInSuccessResponse = {
+  message?: string,
+  token: string,
+  user: TUser,
+};
