@@ -1,6 +1,6 @@
-import { TInputFeedback } from "../../Atoms/Input/types";
+import type { TInputFeedback } from "../../Atoms/Input/types";
 
 export type TCardLoginProps = {
   isLoading: boolean,
-  feedback?: string,
+  feedback?: TInputFeedback,
 };
