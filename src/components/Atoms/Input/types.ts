@@ -1,8 +1,9 @@
 import { InputHTMLAttributes } from "react";
+import type { TFeedbackType } from "../../../interfaces";
 
 export type TInputFeedback = {
   message: string;
-  type: "error" | "warning" | "success" | "info";
+  type: TFeedbackType;
 };
 
 export type TInput = {

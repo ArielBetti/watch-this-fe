@@ -1,8 +1,14 @@
-import { FC, useId } from "react";
+import { FC, useId, useMemo } from "react";
 import type { TInput } from "./types";
+import { getFeedbackType } from "../../../utils/getFeedbackType";
 
 const Input: FC<TInput> = ({ label, feedback, ...rest }) => {
   const inputId = useId();
+
+  const feedBackType = useMemo(
+    () => getFeedbackType(feedback?.type),
+    [feedback]
+  );
 
   return (
     <div className="flex flex-col justify-start items-start w-full gap-2">
@@ -17,9 +23,7 @@ const Input: FC<TInput> = ({ label, feedback, ...rest }) => {
         id={inputId}
         name={inputId}
       />
-      {feedback && (
-        <p className={`text-sm text-feedback-${feedback.type}`}>{feedback.message}</p>
-      )}
+      {feedback && <p className={feedBackType}>{feedback.message}</p>}
     </div>
   );
 };
