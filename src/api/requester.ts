@@ -18,6 +18,20 @@ export const requester = (config: any, contentType?: string): any => {
     (error) => Promise.reject(error)
   );
 
+  service.interceptors.response.use(
+    (res) => res,
+    (error) => {
+      if (
+        error.response.status === 401 &&
+        window.location.pathname !== "/logout"
+      ) {
+         window.location.href = "/logout";
+      }
+
+      return Promise.reject(error);
+    }
+  );
+
   return {
     async get<T = any>(uri: string): Promise<AxiosResponse<T>> {
       const response = await service.get<T>(uri);
