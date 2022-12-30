@@ -17,6 +17,7 @@ import type { TInputFeedback } from "../../components/Atoms/Input/types";
 
 // components
 import { CardLogin, Welcome } from "../../components";
+import { PATHS } from "../../core/paths";
 
 // ::
 const Login: FC = () => {
@@ -52,7 +53,7 @@ const Login: FC = () => {
       setToken(userSignInLoadable.contents.token);
       setUser(userSignInLoadable.contents.user);
       setFeedBackAlert(undefined);
-      navigate("/home");
+      navigate(PATHS.home);
     }
   }, [userSignInLoadable.contents, userSignInLoadable.state]);
 

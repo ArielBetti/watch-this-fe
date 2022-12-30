@@ -18,9 +18,12 @@ import { atomSignInBody } from "../../../recoil/atoms";
 
 // utils
 import { getFeedbackType } from "../../../utils/getFeedbackType";
+import { useNavigate } from "react-router";
+import { PATHS } from "../../../core/paths";
 
 // ::
 const CardLogin: FC<TCardLoginProps> = ({ isLoading, feedback }) => {
+  const navigate = useNavigate();
   const feedBackType = useMemo(
     () => getFeedbackType(feedback?.type),
     [feedback]
@@ -82,7 +85,7 @@ const CardLogin: FC<TCardLoginProps> = ({ isLoading, feedback }) => {
           <ArrowRightOnRectangleIcon className="h-5 w-5" />
           Entrar
         </Button>
-        <Button className="md:max-w-xs w-full" onClick={() => console.log()}>
+        <Button className="md:max-w-xs w-full" onClick={() => navigate(PATHS.signin)}>
           <IdentificationIcon className="h-5 w-5" />
           Cadastrar
         </Button>
