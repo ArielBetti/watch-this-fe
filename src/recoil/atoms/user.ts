@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 import type { TUser } from "../../interfaces";
 import { localStorageEffect } from "../../utils";
-import { TSignInRequestBody, TSignUpRequestBody } from "../../interfaces/api";
+import { TSignUpRequestBody, TSignInRequestBody } from "../../interfaces/api";
 import { TInputFeedback } from "../../components/Atoms/Input/types";
 
 export const atomUser = atom<TUser>({
@@ -16,13 +16,13 @@ export const atomToken = atom<string>({
   effects: [localStorageEffect('atomToken')],
 });
 
-export const atomSignUpBody = atom<TSignUpRequestBody>({
-  key: "atomSignUpBody",
+export const atomSignInBody = atom<TSignInRequestBody>({
+  key: "atomSignInBody",
   default: undefined,
 });
 
-export const atomSignInBody = atom<TSignInRequestBody>({
-  key: "atomSignInBody",
+export const atomSignUpBody = atom<TSignUpRequestBody>({
+  key: "atomSignUpBody",
   default: undefined,
 });
 

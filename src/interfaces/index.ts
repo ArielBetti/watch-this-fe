@@ -1,3 +1,5 @@
+import { TButton } from "../components/Atoms/Button/types";
+
 export type TUser = {
   avatar: TAvatar;
   name: string;
@@ -40,3 +42,4 @@ export type TEndpointUserList = {
 
 export type TFeedbackType = "error" | "warning" | "success" | "info";
 
+export type TButtons = TButton[];

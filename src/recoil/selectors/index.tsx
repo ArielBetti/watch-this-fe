@@ -7,14 +7,14 @@ import { TUserSignInSuccessResponse, TUserSignUpSuccessResponse } from "../../in
 export const selectorSendSignIn = selector({
   key: "selectorSendSignIn",
   get: async ({ get }): Promise<TUserSignInSuccessResponse | undefined> => {
-    const userSignIn = get(atomSignInBody);
+    const userSignUp = get(atomSignInBody);
 
-    if (!userSignIn) return;
+    if (!userSignUp) return;
 
-    if (userSignIn) {
+    if (userSignUp) {
       const { data } = await requester({
         baseURL: import.meta.env.VITE_WATCH_THIS_BASE_API,
-      }).post(ENDPOINTS.login, userSignIn);
+      }).post(ENDPOINTS.login, userSignUp);
 
       return data;
     }

@@ -51,8 +51,8 @@ const CardLogin: FC<TCardLoginProps> = ({ isLoading, feedback }) => {
   };
 
   return (
-    <Card className="max-w-sm w-full py-5 px-3">
-      <div className="flex flex-col justify-start items-start gap-2">
+    <Card className="w-full max-w-sm py-5 px-3">
+      <div className="flex flex-col items-start justify-start gap-2">
         <Input
           onChange={(e) => setName(e.target.value)}
           label="Nome"
@@ -65,10 +65,10 @@ const CardLogin: FC<TCardLoginProps> = ({ isLoading, feedback }) => {
           placeholder="Sua senha"
         />
       </div>
-      <div className="py-5 flex flex-col gap-2">
+      <div className="flex flex-col gap-2 py-5">
         {feedback && !isLoading && (
           <div
-            className={`${feedBackType} flex justify-start items-center gap-1`}
+            className={`${feedBackType} flex items-center justify-start gap-1`}
           >
             <ExclamationCircleIcon className="h-6 w-6" />
             <p>{feedback.message}</p>
@@ -76,16 +76,19 @@ const CardLogin: FC<TCardLoginProps> = ({ isLoading, feedback }) => {
         )}
         <InlineLoading text="Carregando..." isLoading={isLoading} />
       </div>
-      <div className="flex md:flex-nowrap flex-wrap justify-start items-center gap-2">
+      <div className="flex flex-wrap items-center justify-start gap-2 md:flex-nowrap">
         <Button
           disabled={disabledSignInButton}
-          className="disabled:bg-primary/50 disabled:cursor-not-allowed md:w-auto w-full"
+          className="w-full disabled:cursor-not-allowed disabled:bg-primary/50 md:w-auto"
           onClick={() => handleSignInButton()}
         >
           <ArrowRightOnRectangleIcon className="h-5 w-5" />
           Entrar
         </Button>
-        <Button className="md:max-w-xs w-full" onClick={() => navigate(PATHS.signin)}>
+        <Button
+          className="w-full md:max-w-xs"
+          onClick={() => navigate(PATHS.signOut)}
+        >
           <IdentificationIcon className="h-5 w-5" />
           Cadastrar
         </Button>

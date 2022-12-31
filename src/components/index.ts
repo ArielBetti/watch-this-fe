@@ -5,6 +5,7 @@ import Card from "./Atoms/Card";
 import CardSignUp from "./Molecules/CardSignUp";
 import Input from "./Atoms/Input";
 import LoadingStatus from "./Atoms/LoadingStatus";
+import Modal from "./Atoms/Modal";
 import ThemeToggle from "./Atoms/ThemeToggle";
 import Welcome from "./Atoms/Welcome";
 
@@ -19,12 +20,13 @@ export {
   Button,
   Card,
   CardLogin,
-  CustomAvatar,
   CardSignUp,
+  CustomAvatar,
   Header,
   InlineLoading,
   Input,
   LoadingStatus,
+  Modal,
   ThemeToggle,
   Welcome,
 };

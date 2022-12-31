@@ -11,25 +11,29 @@ import { Input, Button, InlineLoading } from "../..";
 
 // types
 import type { TCardSignUpProps } from "./types";
-import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
-import { atomSignUpBody, atomSignUpFeedback } from "../../../recoil/atoms";
+import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
+import { atomConfettiState, atomSignUpBody, atomSignUpFeedback } from "../../../recoil/atoms";
 import { getFeedbackType } from "../../../utils/getFeedbackType";
 
 // ::
-const CardSignUp: FC<TCardSignUpProps> = ({
-  avatar,
-  isLoading
-}) => {
+const CardSignUp: FC<TCardSignUpProps> = ({ avatar, isLoading }) => {
   // local: states
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 
   // recoil: states
-  const [feedback, setFeedback] = useRecoilState(atomSignUpFeedback);
+  const confettiState = useSetRecoilState(atomConfettiState);
+  const feedback = useRecoilValue(atomSignUpFeedback);
   const setSignUpRequestBody = useSetRecoilState(atomSignUpBody);
 
   // recoil: reset
   const resetFeedback = useResetRecoilState(atomSignUpFeedback);
+
+  // memo: states
+  const disabledSignUpButton = useMemo(
+    () => !(name && password && !isLoading),
+    [name, password]
+  );
 
   const feedBackType = useMemo(
     () => getFeedbackType(feedback?.type),
@@ -39,9 +43,10 @@ const CardSignUp: FC<TCardSignUpProps> = ({
   const handleChangeName = (name: string) => {
     setName(name);
     if (feedback?.message) resetFeedback();
-  }
+  };
 
   const handleSignUp = () => {
+    confettiState(false);
     if (name && password && avatar) {
       setSignUpRequestBody({
         avatar,
@@ -52,7 +57,7 @@ const CardSignUp: FC<TCardSignUpProps> = ({
   };
 
   return (
-    <div className="p-4 rounded-md shadow-md w-full lg:max-w-sm flex gap-3 flex-col bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600">
+    <div className="flex w-full flex-col gap-3 rounded-md border border-zinc-300 bg-white p-4 shadow-md dark:border-zinc-600 dark:bg-zinc-800 lg:max-w-sm">
       <Input
         onChange={(e) => handleChangeName(e.target.value)}
         type="text"
@@ -65,10 +70,10 @@ const CardSignUp: FC<TCardSignUpProps> = ({
         label="Senha"
         placeholder="Sua senha"
       />
-      <div className="py-4 flex flex-col gap-2">
+      <div className="flex flex-col gap-2 py-4">
         {feedback?.message && !isLoading && (
           <div
-            className={`${feedBackType} flex justify-start items-center gap-1`}
+            className={`${feedBackType} flex items-center justify-start gap-1`}
           >
             <ExclamationCircleIcon className="h-6 w-6" />
             <p>{feedback.message}</p>
@@ -76,8 +81,12 @@ const CardSignUp: FC<TCardSignUpProps> = ({
         )}
         <InlineLoading text="Carregando..." isLoading={isLoading} />
       </div>
-      <div className="flex md:flex-nowrap flex-wrap justify-start items-center gap-2">
-        <Button className="w-auto" onClick={() => handleSignUp()}>
+      <div className="flex flex-wrap items-center justify-start gap-2 md:flex-nowrap">
+        <Button
+          disabled={disabledSignUpButton}
+          className="w-auto"
+          onClick={() => handleSignUp()}
+        >
           <IdentificationIcon className="h-5 w-5" />
           Cadastrar
         </Button>
