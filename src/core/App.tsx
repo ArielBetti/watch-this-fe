@@ -10,7 +10,12 @@ import AppRouter from "../routes";
 
 // recoil: atoms
 import { atomConfettiState, atomTheme } from "../recoil/atoms";
+
+// hooks
 import { useWindowDimensions } from "../hooks/useWindowDimensions";
+
+// components
+import { Header } from "../components";
 
 // ::
 const App = () => {
@@ -32,7 +37,7 @@ const App = () => {
   }, [theme]);
 
   return (
-    <div className="min-h-screen bg-gray-200 text-black transition-colors dark:bg-zinc-900 dark:text-white">
+    <div className="py-24 min-h-screen bg-gray-200 text-black transition-colors dark:bg-zinc-900 dark:text-white">
       <BrowserRouter>
         {confettiState && (
           <Confetti
@@ -45,6 +50,7 @@ const App = () => {
             style={{ zIndex: 10 }}
           />
         )}
+        <Header />
         <AppRouter />
       </BrowserRouter>
     </div>

@@ -1,6 +1,5 @@
-import { FC } from "react";
-
-const Welcome: FC = () => {
+// ::
+const Welcome = () => {
   return (
     <div className="flex flex-col gap-2 max-w-md lg:text-left text-center">
       <h1 className="text-6xl font-bold text-primary">WatchThis</h1>

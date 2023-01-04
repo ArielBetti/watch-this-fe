@@ -1,12 +1,16 @@
-import { FC } from "react";
+// types
+import type { TLoadingStatus } from "./types";
 
-const LoadingStatus: FC = () => {
+// ::
+const LoadingStatus = ({ size = 20 }: TLoadingStatus) => {
   return (
     <svg
-      className="animate-spin h-6 w-6"
+      className="animate-spin"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
+      width={size}
+      height={size}
     >
       <circle
         className="opacity-25 stroke-primary"

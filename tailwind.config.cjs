@@ -5,7 +5,7 @@ module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     fontFamily: {
-      sans: "Open Sans",
+      sans: ["Open Sans"],
     },
     extend: {
       colors: {
@@ -19,6 +19,9 @@ module.exports = {
           success: "#007e33",
           info: "#0d47a1",
         },
+      },
+      backgroundImage: {
+        waves: "url('./assets/waves.svg')",
       },
       keyframes: {
         blurIn: {
@@ -35,10 +38,21 @@ module.exports = {
             opacity: 1,
           },
         },
+        downSlide: {
+          "0%, 100%": {
+            transform: "translateY(-20px)",
+            opacity: 0,
+          },
+          "100%": {
+            transform: "translateY(0px)",
+            opacity: 1,
+          },
+        },
       },
       animation: {
         blurIn: "blurIn 0.45s ease-in-out forwards",
         fadeIn: "fadeIn 0.4s  ease forwards",
+        downSlide: "downSlide 0.25s  ease forwards",
       },
     },
   },

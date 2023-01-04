@@ -1,8 +1,13 @@
-import { FC, useId, useMemo } from "react";
+import { useId, useMemo } from "react";
+
+// types
 import type { TInput } from "./types";
+
+// utils
 import { getFeedbackType } from "../../../utils/getFeedbackType";
 
-const Input: FC<TInput> = ({ label, feedback, ...rest }) => {
+// ::
+const Input = ({ label, feedback, ...rest }: TInput) => {
   const inputId = useId();
 
   const feedBackType = useMemo(
