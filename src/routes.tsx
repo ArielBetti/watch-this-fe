@@ -1,14 +1,15 @@
 import { Routes, Route } from "react-router-dom";
 
 // pages
-import { Home, Login, SignUp } from './pages';
+import { Home, Login, Logout, SignUp } from './pages';
 import { PATHS } from "./core/paths";
 
 const AppRouter = () => (
   <Routes>
     <Route path={PATHS.login} element={<Login />} />
     <Route path={PATHS.home} element={<Home />} />
-    <Route path={PATHS.signOut} element={<SignUp />} />
+    <Route path={PATHS.signup} element={<SignUp />} />
+    <Route path={PATHS.logout} element={<Logout />} />
   </Routes>
 );
 
