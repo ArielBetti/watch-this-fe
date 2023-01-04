@@ -1,7 +1,14 @@
-import { FC, useEffect, useMemo, useState } from "react";
-import { atomUser } from "../../../recoil/atoms";
+import { FC, useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import {
+import { createAvatar } from "@dicebear/avatars";
+import { stringify } from "qs";
+import * as style from "@dicebear/adventurer-neutral";
+
+// recoil: atoms
+import { atomUser } from "../../../recoil/atoms";
+
+// types
+import type {
   TAvatarAccessoires,
   TAvatarEyes,
   TAvatarEyesBrow,
@@ -9,9 +16,11 @@ import {
   TAvatarSkinColor,
   TCustomAvatarProps,
 } from "./types";
-import { createAvatar } from "@dicebear/avatars";
-import * as style from "@dicebear/adventurer-neutral";
+
+// recoil: atoms
 import AvatarOptionSelector from "../../Atoms/AvatarOptionSelector";
+
+// constants
 import {
   AVATAR_ACCESSOIRES,
   AVATAR_EYES,
@@ -19,12 +28,12 @@ import {
   AVATAR_MOUTH,
   AVATAR_SKIN_COLOR,
 } from "./options";
-import { stringify } from "qs";
 
-const CustomAvatar: FC<TCustomAvatarProps> = ({
+// ::
+const CustomAvatar = ({
   seed = "WatchThis",
   setConstructAvatar,
-}) => {
+}: TCustomAvatarProps) => {
   // CONSTANTS
   const AVATAR_BASE_URL = "https://avatars.dicebear.com/api/adventurer-neutral";
 
@@ -99,8 +108,6 @@ const CustomAvatar: FC<TCustomAvatarProps> = ({
       getAvatarSvg();
     }
   }, [user]);
-
-  console.log(getAvatarUrl());
 
   return (
     <div className="select-none md:max-w-xs p-5 bg-white border-zinc-300 dark:bg-zinc-800 rounded-md border dark:border-zinc-600 shadow-lg flex flex-col gap-2 items-center justify-center">

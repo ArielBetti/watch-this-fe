@@ -1,14 +1,18 @@
-import React, { FC, useCallback, useMemo } from "react";
-import { TAvatarOptionSelector } from "./types";
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
-import { ArrowRightIcon } from "@heroicons/react/24/solid";
+import { useCallback, useMemo } from "react";
 
-const AvatarOptionSelector: FC<TAvatarOptionSelector> = ({
+// types
+import type { TAvatarOptionSelector } from "./types";
+
+// icons
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+
+// ::
+const AvatarOptionSelector = ({
   currentOption,
   label,
   options,
   setCurrentOption,
-}) => {
+}: TAvatarOptionSelector) => {
   // memo: states
   const getIndex = useMemo(() => {
     const getCurrntIndex = options.findIndex(
@@ -48,9 +52,9 @@ const AvatarOptionSelector: FC<TAvatarOptionSelector> = ({
   }, [getIndex, options, setCurrentOption]);
 
   return (
-    <div className="flex flex-col bg-white border justify-center items-center border-zinc-300 rounded-md dark:bg-zinc-800 dark:border-zinc-600 p-2">
+    <div className="flex flex-col items-center justify-center rounded-md border border-zinc-300 bg-white p-2 dark:border-zinc-600 dark:bg-zinc-800">
       <p>{label}</p>
-      <div className="flex gap-2 items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <button onClick={() => onBackOptionChange()}>
           <ArrowLeftIcon className="h-6 w-6" />
         </button>

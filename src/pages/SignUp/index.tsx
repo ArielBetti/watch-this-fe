@@ -1,24 +1,36 @@
-import { useEffect, useMemo, useState } from "react";
-import type { TAvatar } from "../../interfaces";
-import { CardSignUp, CustomAvatar, Modal } from "../../components";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
-  useRecoilValue,
   useRecoilValueLoadable,
   useResetRecoilState,
   useSetRecoilState,
 } from "recoil";
-import { atomConfettiState, atomSignUpBody, atomSignUpFeedback } from "../../recoil/atoms";
+
+// icons
+import { PATHS } from "../../core/paths";
+
+// icons
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+
+// recoil: selectors
 import { selectorSendSignUp } from "../../recoil/selectors";
 
-import { TInputFeedback } from "../../components/Atoms/Input/types";
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
-import { PATHS } from "../../core/paths";
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
+// recoil: atoms
+import {
+  atomConfettiState,
+  atomSignUpBody,
+  atomSignUpFeedback,
+} from "../../recoil/atoms";
 
+// types
+import type { TAvatar } from "../../interfaces";
+import { type TInputFeedback } from "../../components/Atoms/Input/types";
+
+// components
+import { CardSignUp, CustomAvatar, Modal } from "../../components";
+
+// ::
 const SignOut = () => {
-  const navigate = useNavigate();
-
   // constants
   const initialFeedbackType: TInputFeedback = {
     message: "",
@@ -31,8 +43,9 @@ const SignOut = () => {
 
   // recoil: states
   const setConfettiState = useSetRecoilState(atomConfettiState);
-  const user = useRecoilValue(atomSignUpBody);
   const setFeedback = useSetRecoilState(atomSignUpFeedback);
+
+  // recoil: resets
   const resetSignUpBody = useResetRecoilState(atomSignUpBody);
 
   // recoil: loadable
@@ -71,27 +84,23 @@ const SignOut = () => {
   }, []);
 
   return (
-    <div className="container mx-auto flex flex-col gap-6 px-4 py-10">
+    <div className="container mx-auto flex flex-col gap-6 px-4">
       <div className="flex">
-        <Link to={PATHS.login} className="group transition-all hover:text-primary-dark-contrast flex items-center gap-2 text-primary">
+        <Link
+          to={PATHS.login}
+          className="group flex items-center gap-2 text-primary transition-all hover:text-primary-dark-contrast"
+        >
           <ArrowLeftIcon className="h-5 w-5 group-hover:-translate-x-1" />
           Voltar para login
         </Link>
       </div>
       <div className="flex flex-wrap items-start justify-center gap-10">
-        <Modal open={open} handleCloseButton={() => setOpen(false)}>
-          <div className="flex-col items-start justify-start gap-2">
-            <h2 className="text-lg font-semibold">Sucesso!</h2>
-            <p className="pt-6">
-              Olá <span className="font-bold text-primary">{user?.name}</span>{" "}
-              sua conta foi criada com sucesso, faça login para começar!
-            </p>
-          </div>
-        </Modal>
         <CustomAvatar setConstructAvatar={setAvatar} />
         <CardSignUp
           avatar={avatar}
           isLoading={signUpLoadable.state === "loading"}
+          signUpModalOpen={open}
+          setSignUpModalOpen={setOpen}
         />
       </div>
     </div>

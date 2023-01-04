@@ -1,5 +1,5 @@
-import { FC, memo, useMemo, useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { FC, memo, useEffect, useMemo, useState } from "react";
+import { useResetRecoilState, useSetRecoilState } from "recoil";
 
 import {
   ArrowRightOnRectangleIcon,
@@ -35,6 +35,7 @@ const CardLogin: FC<TCardLoginProps> = ({ isLoading, feedback }) => {
 
   // recoil: states
   const setSignInRequestBody = useSetRecoilState(atomSignInBody);
+  const resetSignInRequestBody = useResetRecoilState(atomSignInBody);
 
   // memo: state
   const disabledSignInButton = useMemo(
@@ -49,6 +50,13 @@ const CardLogin: FC<TCardLoginProps> = ({ isLoading, feedback }) => {
         password,
       });
   };
+
+  useEffect(() => {
+    resetSignInRequestBody();
+    () => {
+      resetSignInRequestBody();
+    }
+  }, []);
 
   return (
     <Card className="w-full max-w-sm py-5 px-3">
@@ -87,7 +95,7 @@ const CardLogin: FC<TCardLoginProps> = ({ isLoading, feedback }) => {
         </Button>
         <Button
           className="w-full md:max-w-xs"
-          onClick={() => navigate(PATHS.signOut)}
+          onClick={() => navigate(PATHS.signup)}
         >
           <IdentificationIcon className="h-5 w-5" />
           Cadastrar
