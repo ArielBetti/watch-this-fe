@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import type { TUser } from "../../interfaces";
+import type { TEndpointUserLists, TUser } from "../../interfaces";
 import { localStorageEffect } from "../../utils";
 import { TSignUpRequestBody, TSignInRequestBody } from "../../interfaces/api";
 import { TInputFeedback } from "../../components/Atoms/Input/types";
@@ -28,5 +28,10 @@ export const atomSignUpBody = atom<TSignUpRequestBody>({
 
 export const atomSignUpFeedback = atom<TInputFeedback | undefined>({
   key: "atomSignUpFeedback",
+  default: undefined,
+});
+
+export const atomUserLists = atom<TEndpointUserLists[]>({
+  key: "atomUserLists",
   default: undefined,
 });

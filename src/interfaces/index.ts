@@ -20,6 +20,7 @@ export type TEndpointUserLists = {
   title: string;
   create_by: string;
   create_byId: string;
+  avatar: TAvatar,
   list: TEndpointUserList[];
 };
 

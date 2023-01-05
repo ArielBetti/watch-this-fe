@@ -1,12 +1,16 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useRecoilValueLoadable } from "recoil";
 
 // paths
 import { PATHS } from "../../core/paths";
 
 // recoil: atoms
-import { atomUser } from "../../recoil/atoms";
+import { atomUser, atomUserLists } from "../../recoil/atoms";
+import { selectorGetUserLists } from "../../recoil/selectors";
+
+// components
+import { CardList, CreateListButton } from "../../components";
 
 // ::
 const Home = () => {
@@ -14,6 +18,19 @@ const Home = () => {
 
   // recoil: states
   const user = useRecoilValue(atomUser);
+  const [userLists, setUserLists] = useRecoilState(atomUserLists);
+
+  // recoil: loadable
+  const getUserListsLoadable = useRecoilValueLoadable(selectorGetUserLists);
+
+  useEffect(() => {
+    if (
+      getUserListsLoadable.state === "hasValue" &&
+      getUserListsLoadable.contents !== undefined
+    ) {
+      setUserLists(getUserListsLoadable.contents);
+    }
+  }, [getUserListsLoadable.state]);
 
   useEffect(() => {
     if (!user) return navigate(PATHS.login);
@@ -21,7 +38,14 @@ const Home = () => {
 
   return (
     <div className="container mx-auto px-4">
-      Home, hello: {user?.name} <img width={100} src={user.avatar.url} alt="" />
+      <div className="pb-10">
+        <CreateListButton />
+      </div>
+      <div className="flex flex-wrap gap-5">
+        {userLists?.map((list) => (
+          <CardList list={list} />
+        ))}
+      </div>
     </div>
   );
 };

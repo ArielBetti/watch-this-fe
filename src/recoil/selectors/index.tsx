@@ -1,8 +1,9 @@
 import { selector } from "recoil";
-import { atomSignInBody, atomSignUpBody } from "../atoms";
+import { atomSignInBody, atomSignUpBody, atomToken } from "../atoms";
 import { requester } from "../../api/requester";
 import { ENDPOINTS } from "../../api/endpoints";
 import { TUserSignInSuccessResponse, TUserSignUpSuccessResponse } from "../../interfaces/api";
+import { TEndpointUserLists } from "../../interfaces";
 
 export const selectorSendSignIn = selector({
   key: "selectorSendSignIn",
@@ -35,5 +36,17 @@ export const selectorSendSignUp = selector({
 
       return data;
     }
+  },
+});
+
+export const selectorGetUserLists = selector({
+  key: "selectorGetUserLists",
+  get: async ({ get }): Promise<TEndpointUserLists[]> => {
+    const { data } = await requester({
+      baseURL:  import.meta.env.VITE_WATCH_THIS_BASE_API,
+      Authorization: get(atomToken),
+    }).get(ENDPOINTS.getUserList);
+
+    return data;
   },
 });
