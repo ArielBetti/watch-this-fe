@@ -112,8 +112,6 @@ const CustomAvatar = ({
     }
   }, [user]);
 
-  console.log(accessoiresProbability);
-
   return (
     <div className="select-none md:max-w-xs p-5 bg-white border-zinc-300 dark:bg-zinc-800 rounded-md border dark:border-zinc-600 shadow-lg flex flex-col gap-2 items-center justify-center">
       <img

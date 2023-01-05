@@ -1,4 +1,6 @@
 export const ENDPOINTS = {
+  baseUrl: 'https://api.themoviedb.org/3',
+  searchMovieByQuery: '/search/movie', // parametro: query
   login: "/login",
   register: "/register",
   logout: "/logout",

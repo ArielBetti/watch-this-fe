@@ -10,7 +10,7 @@ export const requester = (config: any, contentType?: string): any => {
     (req) => {
       req.headers = {
         "Content-Type": contentType || "application/json",
-        ...config,
+        ...config.headers,
       };
 
       return req;
@@ -33,23 +33,23 @@ export const requester = (config: any, contentType?: string): any => {
   );
 
   return {
-    async get<T = any>(uri: string): Promise<AxiosResponse<T>> {
+    async get<T>(uri: string): Promise<AxiosResponse<T>> {
       const response = await service.get<T>(uri);
       return response;
     },
-    async post<T = any>(uri: string, data: any): Promise<AxiosResponse<T>> {
+    async post<T>(uri: string, data: unknown): Promise<AxiosResponse<T>> {
       const response = await service.post<T>(uri, data);
       return response;
     },
-    async put<T = any>(uri: string, data: any): Promise<AxiosResponse<T>> {
+    async put<T>(uri: string, data: unknown): Promise<AxiosResponse<T>> {
       const response = await service.put<T>(uri, data);
       return response;
     },
-    async patch<T = any>(uri: string, data: any): Promise<AxiosResponse<T>> {
+    async patch<T>(uri: string, data: unknown): Promise<AxiosResponse<T>> {
       const response = await service.patch<T>(uri, data);
       return response;
     },
-    async delete<T = any>(uri: string, data: any): Promise<AxiosResponse<T>> {
+    async delete<T>(uri: string, data: any): Promise<AxiosResponse<T>> {
       const response = await service.delete<T>(uri, data);
       return response;
     },
