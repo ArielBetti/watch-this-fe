@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { createAvatar } from "@dicebear/avatars";
 import { stringify } from "qs";
@@ -47,10 +47,13 @@ const CustomAvatar = ({
   // recoil: states
   const user = useRecoilValue(atomUser);
 
+  // memo: states
+  const accessoiresProbability = useMemo(() => (accessoires?.[0] ? 100 : 0), [accessoires])
+
   const getAvatarSvg = () => {
     return createAvatar(style, {
       accessoires: accessoires?.[0] ? accessoires : ["birthmark"],
-      accessoiresProbability: accessoires?.[0] ? 100 : 0,
+      accessoiresProbability,
       eyes: eyes || null,
       eyebrows: eyesBrows || null,
       mouth: mouth || null,
@@ -65,7 +68,7 @@ const CustomAvatar = ({
     let params = stringify(
       {
         accessoires: accessoires?.[0] ? accessoires : ["birthmark"],
-        accessoiresProbability: accessoires?.[0] ? 100 : 0,
+        accessoiresProbability,
         backgroundColor: skinColor || null,
         eyes: eyes || null,
         eyebrows: eyesBrows || null,
@@ -95,7 +98,7 @@ const CustomAvatar = ({
       flip: true,
       url: avatarURL,
     });
-  }, [eyes, eyesBrows, mouth, setConstructAvatar, skinColor]);
+  }, [eyes, eyesBrows, mouth, setConstructAvatar, skinColor, accessoires]);
 
   useEffect(() => {
     if (user) {
@@ -108,6 +111,8 @@ const CustomAvatar = ({
       getAvatarSvg();
     }
   }, [user]);
+
+  console.log(accessoiresProbability);
 
   return (
     <div className="select-none md:max-w-xs p-5 bg-white border-zinc-300 dark:bg-zinc-800 rounded-md border dark:border-zinc-600 shadow-lg flex flex-col gap-2 items-center justify-center">
