@@ -24,7 +24,9 @@
     "react-dom": "^18.2.0",
     "react-router": "^6.6.1",
     "react-router-dom": "^6.6.1",
-    "recoil": "^0.7.6"
+    "react-use-draggable-scroll": "^0.4.7",
+    "recoil": "^0.7.6",
+    "tailwind-scrollbar-hide": "^1.1.7"
   },
   "devDependencies": {
     "@types/qs": "^6.9.7",
