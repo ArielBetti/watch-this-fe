@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
+  useRecoilValue,
   useRecoilValueLoadable,
   useResetRecoilState,
   useSetRecoilState,
@@ -20,6 +21,7 @@ import {
   atomConfettiState,
   atomSignUpBody,
   atomSignUpFeedback,
+  atomUser,
 } from "../../recoil/atoms";
 
 // types
@@ -31,6 +33,8 @@ import { CardSignUp, CustomAvatar, Modal } from "../../components";
 
 // ::
 const SignOut = () => {
+  const navigate = useNavigate();
+
   // constants
   const initialFeedbackType: TInputFeedback = {
     message: "",
@@ -42,6 +46,7 @@ const SignOut = () => {
   const [open, setOpen] = useState(false);
 
   // recoil: states
+  const user = useRecoilValue(atomUser);
   const setConfettiState = useSetRecoilState(atomConfettiState);
   const setFeedback = useSetRecoilState(atomSignUpFeedback);
 
@@ -82,6 +87,10 @@ const SignOut = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+
+  useEffect(() => {
+    if (user) navigate(PATHS.home);
+  }, [user]);
 
   return (
     <div className="container mx-auto flex flex-col gap-6 px-4">

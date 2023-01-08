@@ -25,6 +25,8 @@ import CustomAvatar from "./Molecules/CustomAvatar";
 import Header from "./Molecules/Header";
 import InlineLoading from "./Molecules/InlineLoading";
 import UserMenu from "./Molecules/UserMenu";
+import WelcomeBack from "./Molecules/WelcomeBack";
+
 export {
   AvatarOptionSelector,
   BackdropLoader,
@@ -49,5 +51,6 @@ export {
   ThemeToggle,
   Tooltip,
   UserMenu,
+  WelcomeBack,
   Welcome,
 };

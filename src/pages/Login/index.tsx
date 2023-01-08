@@ -6,6 +6,9 @@ import {
   useSetRecoilState,
 } from "recoil";
 
+// paths
+import { PATHS } from "../../core/paths";
+
 // recoil: selectors
 import { selectorSendSignIn } from "../../recoil/selectors";
 
@@ -16,8 +19,7 @@ import { atomToken, atomUser } from "../../recoil/atoms";
 import type { TInputFeedback } from "../../components/Atoms/Input/types";
 
 // components
-import { CardLogin, Welcome } from "../../components";
-import { PATHS } from "../../core/paths";
+import { CardLogin, Welcome, WelcomeBack } from "../../components";
 
 // ::
 const Login = () => {
@@ -58,12 +60,16 @@ const Login = () => {
   }, [userSignInLoadable.contents, userSignInLoadable.state]);
 
   return (
-    <div className="pt-40 container mx-auto px-4 flex items-center lg:flex-row flex-col w-full justify-center gap-10">
+    <div className="container mx-auto flex w-full flex-col items-center justify-center gap-10 px-4 lg:flex-row">
       <Welcome />
-      <CardLogin
-        isLoading={userSignInLoadable.state === "loading"}
-        feedback={feedbackAlert}
-      />
+      {user ? (
+        <WelcomeBack />
+      ) : (
+        <CardLogin
+          isLoading={userSignInLoadable.state === "loading"}
+          feedback={feedbackAlert}
+        />
+      )}
     </div>
   );
 };
