@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 // types
 import { TCardMovieProps } from "./type";
 
@@ -7,12 +5,16 @@ import { TCardMovieProps } from "./type";
 import { MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
 import Tooltip from "../Tooltip";
 
+// constants
+import { IMAGE_URL } from "../../../constants";
+
 const CardMovie = ({
   disabled,
   handleClick,
   title,
   image,
 }: TCardMovieProps) => {
+
   return (
     <Tooltip
       children={
@@ -27,11 +29,17 @@ const CardMovie = ({
               <PlusSmallIcon className="h-5 w-5" />
             )}
           </button>
-          <img
-            className="h-0 max-h-full min-h-full w-0 min-w-full max-w-full rounded-md"
-            src={image}
-            alt={`${title} banner`}
-          />
+          {image ? (
+            <img
+              className="h-0 max-h-full min-h-full w-0 min-w-full max-w-full rounded-md"
+              src={`${IMAGE_URL}${image}`}
+              alt={`${title} banner`}
+            />
+          ) : (
+            <div className="text-white font-semibold p-2 h-0 max-h-full min-h-full w-0 min-w-full max-w-full rounded-md bg-primary-dark-contrast">
+              {title}
+            </div>
+          )}
         </div>
       }
       message={title}
