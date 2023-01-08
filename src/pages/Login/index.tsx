@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import {
   useRecoilState,
@@ -20,7 +20,7 @@ import { CardLogin, Welcome } from "../../components";
 import { PATHS } from "../../core/paths";
 
 // ::
-const Login: FC = () => {
+const Login = () => {
   const navigate = useNavigate();
 
   // local: states

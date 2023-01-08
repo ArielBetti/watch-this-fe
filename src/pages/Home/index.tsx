@@ -43,7 +43,7 @@ const Home = () => {
       </div>
       <div className="flex flex-wrap gap-5">
         {userLists?.map((list) => (
-          <CardList list={list} />
+          <CardList key={list.id} list={list} />
         ))}
       </div>
     </div>

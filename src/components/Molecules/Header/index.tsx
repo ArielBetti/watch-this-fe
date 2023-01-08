@@ -9,7 +9,7 @@ import { Logo, ThemeToggle, UserMenu } from "../..";
 // ::
 const Header = () => {
   return (
-    <div className="fixed left-0 top-0 h-16 w-full border-b border-zinc-300 bg-white shadow-md dark:border-zinc-600 dark:bg-zinc-800">
+    <div className="fixed z-20 left-0 top-0 h-16 w-full border-b border-zinc-300 bg-white shadow-md dark:border-zinc-600 dark:bg-zinc-800">
       <div className="container mx-auto flex h-full items-center justify-between px-4">
         <Link to={PATHS.login}>
           <Logo />
