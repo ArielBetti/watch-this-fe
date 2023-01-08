@@ -12,7 +12,7 @@ module.exports = {
         primary: "#9147ff",
         "primary-light-contrast": "#b689fa",
         "primary-dark-contrast": "#6826c9",
-        secondary: "#FEC260",
+        secondary: "#b5179e",
         feedback: {
           error: "#cc0000",
           warning: "#ff8800",
@@ -48,13 +48,27 @@ module.exports = {
             opacity: 1,
           },
         },
+        leftSlide: {
+          "0%, 100%": {
+            transform: "translateX(20px)",
+            opacity: 0,
+          },
+          "100%": {
+            transform: "translateX(0px)",
+            opacity: 1,
+          },
+        },
       },
       animation: {
         blurIn: "blurIn 0.45s ease-in-out forwards",
         fadeIn: "fadeIn 0.4s  ease forwards",
         downSlide: "downSlide 0.25s  ease forwards",
+        leftSlide: "leftSlide 0.25s  ease forwards",
       },
     },
   },
-  plugins: [require('tailwind-scrollbar-hide')],
+  plugins: [
+    require("tailwind-scrollbar-hide"),
+    require("@tailwindcss/line-clamp"),
+  ],
 };
