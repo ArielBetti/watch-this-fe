@@ -142,7 +142,6 @@ const CreateList = () => {
 
   return (
     <div className="container mx-auto flex h-full flex-col items-center justify-center px-4">
-      <button onClick={() => setModalOpen(true)}>abrir modal</button>
       <Modal open={modalOpen} setModalOpen={setModalOpen}>
         <div className="flex flex-col">
           <h1 className="text-lg font-semibold">Sucesso!</h1>
