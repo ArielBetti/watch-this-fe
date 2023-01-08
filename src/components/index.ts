@@ -1,6 +1,7 @@
 // atoms
 import AvatarOptionSelector from "./Atoms/AvatarOptionSelector";
 import Button from "./Atoms/Button";
+import ButtonDone from "./Atoms/ButtonDone";
 import Card from "./Atoms/Card";
 import CardMovie from "./Atoms/CardMovie";
 import CreateListButton from "./Atoms/CreateListButton";
@@ -8,7 +9,9 @@ import Input from "./Atoms/Input";
 import LoadingStatus from "./Atoms/LoadingStatus";
 import Logo from "./Atoms/Logo";
 import Modal from "./Atoms/Modal";
+import MovieList from "./Atoms/MovieList";
 import ProfilePicture from "./Atoms/ProfilePicture";
+import Sidebar from "./Atoms/Sidebar";
 import ThemeToggle from "./Atoms/ThemeToggle";
 import Tooltip from "./Atoms/Tooltip";
 import Welcome from "./Atoms/Welcome";
@@ -22,11 +25,11 @@ import CustomAvatar from "./Molecules/CustomAvatar";
 import Header from "./Molecules/Header";
 import InlineLoading from "./Molecules/InlineLoading";
 import UserMenu from "./Molecules/UserMenu";
-
 export {
   AvatarOptionSelector,
   BackdropLoader,
   Button,
+  ButtonDone,
   Card,
   CardList,
   CardLogin,
@@ -40,7 +43,9 @@ export {
   LoadingStatus,
   Logo,
   Modal,
+  MovieList,
   ProfilePicture,
+  Sidebar,
   ThemeToggle,
   Tooltip,
   UserMenu,

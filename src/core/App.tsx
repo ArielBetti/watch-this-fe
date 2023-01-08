@@ -37,23 +37,21 @@ const App = () => {
   }, [theme]);
 
   return (
-    <div className="py-24 min-h-screen bg-gray-200 text-black transition-colors dark:bg-zinc-900 dark:text-white">
-      <BrowserRouter>
-        {confettiState && (
-          <Confetti
-            width={width}
-            height={height}
-            recycle={false}
-            numberOfPieces={500}
-            tweenDuration={15000}
-            gravity={0.15}
-            style={{ zIndex: 10 }}
-          />
-        )}
-        <Header />
-        <AppRouter />
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      {confettiState && (
+        <Confetti
+          width={width}
+          height={height}
+          recycle={false}
+          numberOfPieces={500}
+          tweenDuration={15000}
+          gravity={0.15}
+          style={{ zIndex: 50 }}
+        />
+      )}
+      <Header />
+      <AppRouter />
+    </BrowserRouter>
   );
 };
 
