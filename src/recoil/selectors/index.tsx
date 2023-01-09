@@ -1,4 +1,4 @@
-import { selector } from "recoil";
+import { selector, selectorFamily } from "recoil";
 
 // atoms
 import {
@@ -108,4 +108,20 @@ export const selectorSendUserCreateList = selector({
 
     return data;
   },
+});
+
+export const selectorGetList = selectorFamily({
+  key: "selectorGetList",
+  get:
+    (id: string) =>
+    async ({ get }): Promise<TEndpointUserLists | undefined> => {
+      get(atomHashTmdbSearch);
+      if (!id) return;
+
+      const { data } = await requester({
+        baseURL: import.meta.env.VITE_WATCH_THIS_BASE_API,
+      }).get(`${ENDPOINTS.getList}/?id=${id}`);
+
+      return data;
+    },
 });

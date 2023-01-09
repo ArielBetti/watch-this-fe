@@ -1,6 +1,6 @@
 export type TCardMovieProps = {
   title: string,
-  disabled: boolean,
+  disabled?: boolean,
   image?: string,
-  handleClick: () => void,
+  handleClick?: () => void,
 }

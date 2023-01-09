@@ -4,4 +4,5 @@ export const PATHS = {
   signup: '/signup',
   logout: '/logout',
   createList: '/create-list',
+  list: '/list',
 };

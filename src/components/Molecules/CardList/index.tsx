@@ -1,8 +1,12 @@
 import { type MutableRefObject, useRef } from "react";
 import { Link } from "react-router-dom";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 // icons
-import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowTopRightOnSquareIcon,
+  LinkIcon,
+} from "@heroicons/react/24/outline";
 
 // paths
 import { PATHS } from "../../../core/paths";
@@ -17,15 +21,21 @@ import type { TCardListProps } from "./types";
 
 // components
 import { Card, ProfilePicture } from "../..";
+import { usePushNotification } from "../../../hooks/usePushNotification";
 
 // ::
 const CardList = ({ list }: TCardListProps) => {
-  if (list.list.length === 0) return null;
+  const pushNotification = usePushNotification();
+
+  const listUrl = `${import.meta.env.VITE_WATCH_THIS_FE_BASE_URL}${
+    PATHS.list
+  }/${list.id}`;
 
   // refs
   const ref = useRef<HTMLDivElement>() as MutableRefObject<HTMLInputElement>;
   const { events } = useDraggable(ref); // Now we pass the reference to the useDraggable hook:
 
+  if (list.list.length === 0) return null;
   return (
     <Card className="flex w-full flex-col gap-2 p-4 lg:max-w-xl">
       <div className="flex items-start gap-2">
@@ -58,14 +68,28 @@ const CardList = ({ list }: TCardListProps) => {
         </div>
       </div>
       <div className="pt-3">
-        <div className="flex">
+        <div className="flex gap-5">
           <Link
             className="flex items-center gap-2 text-primary transition-all hover:text-primary-dark-contrast"
-            to={PATHS.home}
+            to={`${PATHS.list}/${list.id}`}
           >
             <ArrowTopRightOnSquareIcon className="h-5 w-5" />
             Ver lista
           </Link>
+          <CopyToClipboard
+            text={listUrl}
+            onCopy={() =>
+              pushNotification({
+                title: `Lista ${list.title} copiada com sucesso!`,
+                message: "Link copiado para área de transferência",
+              })
+            }
+          >
+            <button className="flex items-center gap-2 text-primary transition-all hover:text-primary-dark-contrast">
+              <LinkIcon className="w--5 h-5" />
+              Compartilhar lista
+            </button>
+          </CopyToClipboard>
         </div>
       </div>
     </Card>

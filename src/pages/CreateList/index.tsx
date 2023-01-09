@@ -34,6 +34,7 @@ import {
 import {
   atomConfettiState,
   atomHashTmdbSearch,
+  atomHashUserCreateList,
   atomTmdbSearch,
   atomUserCreateList,
   atomUserCreateListRequestBody,
@@ -62,6 +63,7 @@ const CreateList = () => {
   const setCreateListRequestBody = useSetRecoilState(
     atomUserCreateListRequestBody
   );
+  const [hashUserList, setHashUserList] = useRecoilState(atomHashUserCreateList)
 
   // recoil: resets
   const resetListName = useResetRecoilState(atomUserListName);
@@ -109,7 +111,6 @@ const CreateList = () => {
       getQueryMoviesLodable.state === "hasValue" &&
       getQueryMoviesLodable.contents !== undefined
     ) {
-      console.log("bateu aqui", getQueryMoviesLodable.contents);
       setMovieList(getQueryMoviesLodable.contents.results);
     }
   }, [getQueryMoviesLodable.state, getQueryMoviesLodable.contents]);
@@ -122,6 +123,7 @@ const CreateList = () => {
       setSideBarOpen(false);
       setModalOpen(true);
       setConffetiState(true);
+      setHashUserList(hashUserList + 1);
 
       resetCreateListRequestBody();
       resetNewList();

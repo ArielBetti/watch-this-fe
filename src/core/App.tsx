@@ -2,6 +2,10 @@ import { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import Confetti from "react-confetti";
 
+// radix: components
+import * as RadixToast from "@radix-ui/react-toast";
+import * as Tooltip from "@radix-ui/react-tooltip";
+
 // recoil
 import { useRecoilValue } from "recoil";
 
@@ -15,7 +19,7 @@ import { atomConfettiState, atomTheme } from "../recoil/atoms";
 import { useWindowDimensions } from "../hooks/useWindowDimensions";
 
 // components
-import { Header } from "../components";
+import { Header, Toast } from "../components";
 
 // ::
 const App = () => {
@@ -37,21 +41,27 @@ const App = () => {
   }, [theme]);
 
   return (
-    <BrowserRouter>
-      {confettiState && (
-        <Confetti
-          width={width}
-          height={height}
-          recycle={false}
-          numberOfPieces={500}
-          tweenDuration={15000}
-          gravity={0.15}
-          style={{ zIndex: 50 }}
-        />
-      )}
-      <Header />
-      <AppRouter />
-    </BrowserRouter>
+    <RadixToast.Provider>
+      <Tooltip.Provider>
+        <BrowserRouter>
+          {confettiState && (
+            <Confetti
+              width={width}
+              height={height}
+              recycle={false}
+              numberOfPieces={500}
+              tweenDuration={15000}
+              gravity={0.15}
+              style={{ zIndex: 50 }}
+            />
+          )}
+          <Header />
+          <AppRouter />
+          <Toast />
+        </BrowserRouter>
+        <RadixToast.Viewport className="fixed bottom-0 right-0 z-[100] m-0 flex w-full max-w-lg flex-col gap-3 p-10 outline-none" />
+      </Tooltip.Provider>
+    </RadixToast.Provider>
   );
 };
 

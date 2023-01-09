@@ -13,6 +13,7 @@ import MovieList from "./Atoms/MovieList";
 import ProfilePicture from "./Atoms/ProfilePicture";
 import Sidebar from "./Atoms/Sidebar";
 import ThemeToggle from "./Atoms/ThemeToggle";
+import Toast from "./Atoms/Toast";
 import Tooltip from "./Atoms/Tooltip";
 import Welcome from "./Atoms/Welcome";
 
@@ -49,8 +50,9 @@ export {
   ProfilePicture,
   Sidebar,
   ThemeToggle,
+  Toast,
   Tooltip,
   UserMenu,
-  WelcomeBack,
   Welcome,
+  WelcomeBack,
 };
