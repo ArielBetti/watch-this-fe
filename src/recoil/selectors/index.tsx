@@ -83,7 +83,7 @@ export const selectorGetTmdbByQuery = selector({
     const { data } = await requester({
       baseURL: ENDPOINTS.baseUrl,
     }).get(
-      `${ENDPOINTS.searchMovieByQuery}/?api_key=${
+      `${ENDPOINTS.searchMovieByQuery}?api_key=${
         import.meta.env.VITE_TMDB_API_KEY
       }&language=pt-br&query=${query}`
     );
