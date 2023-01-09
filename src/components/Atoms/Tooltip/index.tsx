@@ -7,12 +7,11 @@ import type { TTooltipProps } from "./type";
 // ::
 const Tooltip = ({ children, message }: TTooltipProps) => {
   return (
-    <RadixTooltip.Provider>
       <RadixTooltip.Root>
         <RadixTooltip.Trigger asChild>{children}</RadixTooltip.Trigger>
         <RadixTooltip.Portal>
           <RadixTooltip.Content
-            className="rounded-md bg-primary-dark-contrast/80 p-2 text-white shadow-lg backdrop-blur-sm"
+            className="motion-safe:animate-upSlide rounded-md bg-primary-dark-contrast/80 p-2 text-white shadow-lg backdrop-blur-sm"
             sideOffset={5}
           >
             {message}
@@ -20,7 +19,6 @@ const Tooltip = ({ children, message }: TTooltipProps) => {
           </RadixTooltip.Content>
         </RadixTooltip.Portal>
       </RadixTooltip.Root>
-    </RadixTooltip.Provider>
   );
 };
 

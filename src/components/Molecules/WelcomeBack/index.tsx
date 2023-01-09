@@ -35,7 +35,7 @@ const WelcomeBack = () => {
   return (
     <div className="flex flex-wrap items-center justify-center gap-10">
       <div>
-        <Avatar.Root className="flex h-44 w-44 select-none items-center overflow-hidden rounded-lg bg-primary-dark-contrast align-middle">
+        <Avatar.Root className="flex h-44 w-44 select-none items-center overflow-hidden rounded-lg align-middle">
           <Avatar.Image
             className="h-full w-full object-cover shadow-md"
             src={user.avatar.url}

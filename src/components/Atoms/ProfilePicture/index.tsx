@@ -19,7 +19,7 @@ const ProfilePicture = ({ fallback, url }: TProfilePicture) => {
   }, [fallback]);
 
   return (
-    <Avatar.Root className="flex h-10 w-10 select-none items-center overflow-hidden rounded-lg bg-primary-dark-contrast align-middle">
+    <Avatar.Root className="flex h-10 w-10 select-none items-center overflow-hidden rounded-lg align-middle">
       <Avatar.Image
         className="h-full w-full object-cover shadow-md"
         src={url}
