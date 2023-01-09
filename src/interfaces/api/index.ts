@@ -23,27 +23,49 @@ export type TUserSignUpSuccessResponse = {
 
 export type TTmdbMovies = {
   page: number;
-  results: TTmdbResult[];
+  results: TTmdbMoviesAndTvResult[];
   total_pages: number;
   total_results: number;
 };
 
-export type TTmdbResult = {
-  adult: boolean;
+export type TTmdbTV = {
+  results: TTmdbTVResult[];
+} & TTmdbMovies;
+
+export type TTmdbTVResult = {
   backdrop_path?: string;
-  genre_ids: number[];
+  first_air_date?: string;
+  genre_ids?: number[];
   id: number;
+  name?: string;
+  origin_country?: string[];
   original_language: string;
-  original_title: string;
+  original_name?: string;
   overview: string;
   popularity: number;
   poster_path?: string;
-  release_date: string;
-  title: string;
-  video: boolean;
   vote_average: number;
   vote_count: number;
 };
+
+export type TTmdbResult = {
+  adult?: boolean;
+  backdrop_path?: string;
+  genre_ids?: number[];
+  id: number;
+  original_language: string;
+  original_title?: string;
+  overview: string;
+  popularity: number;
+  poster_path?: string;
+  release_date?: string;
+  title?: string;
+  video?: boolean;
+  vote_average: number;
+  vote_count: number;
+};
+
+export type TTmdbMoviesAndTvResult = {} & TTmdbTVResult & TTmdbResult;
 
 export type TEndpointUserCreateList = {
   id: string;
@@ -51,12 +73,12 @@ export type TEndpointUserCreateList = {
   create_by: string;
   create_byId: string;
   avatar: TAvatar;
-  list: TTmdbResult[];
+  list: TTmdbMoviesAndTvResult[];
   _id: string;
   __v: number;
 };
 
 export type TUserCreateListBody = {
-  title: string,
-  list: TTmdbResult[],
-}
+  title: string;
+  list: TTmdbMoviesAndTvResult[];
+};

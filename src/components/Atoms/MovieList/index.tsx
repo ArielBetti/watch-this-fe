@@ -27,24 +27,24 @@ const MovieList = ({ list }: TMovieListProps) => {
       {list.map((item) => (
         <div className="flex w-full items-center justify-start gap-2">
           <div className="flex w-full items-start justify-start gap-3 rounded-md bg-white p-2 shadow-md dark:bg-zinc-800">
-            {item.poster_path ? (
+            {item?.poster_path ? (
               <div className="min-w-fit">
                 <img
                   draggable={false}
                   className="h-14 w-12 rounded-md shadow-md"
                   src={`${IMAGE_URL}${item.poster_path}`}
-                  alt={`Poster image of ${item.title}`}
+                  alt={`Poster image of ${item?.name || item.title}`}
                 />
               </div>
             ) : (
               <div className="h-10 w-10 rounded-md bg-primary shadow-md" />
             )}
-            <p className="line-clamp-2">{item.title}</p>
+            <p className="line-clamp-2">{item.title || item.name}</p>
           </div>
           <button
             onClick={() =>
               removeListItem({
-                item: item,
+                item,
                 setState: setItemsList,
                 state: itemsList,
               })

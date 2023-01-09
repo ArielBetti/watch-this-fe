@@ -1,11 +1,11 @@
 import type { Dispatch, SetStateAction } from "react";
 
-import { TTmdbResult } from "../interfaces/api";
+import { TTmdbMoviesAndTvResult } from "../interfaces/api";
 
 type props = {
-  item: TTmdbResult;
-  state: TTmdbResult[];
-  setState: Dispatch<SetStateAction<TTmdbResult[]>>;
+  item: TTmdbMoviesAndTvResult;
+  state: TTmdbMoviesAndTvResult[];
+  setState: Dispatch<SetStateAction<TTmdbMoviesAndTvResult[]>>;
 };
 
 export const removeListItem = ({ item, setState, state }: props) => {

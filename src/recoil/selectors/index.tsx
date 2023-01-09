@@ -88,7 +88,19 @@ export const selectorGetTmdbByQuery = selector({
       }&language=pt-br&query=${query}`
     );
 
-    return data;
+    Promise.resolve(data);
+
+    const tvSearch = await requester({
+      baseURL: ENDPOINTS.baseUrl,
+    }).get(
+      `${ENDPOINTS.searchTvByQuery}?api_key=${
+        import.meta.env.VITE_TMDB_API_KEY
+      }&language=pt-br&query=${query}`
+    );
+
+    const tvData = tvSearch?.data;
+
+    return {...data, results: [...data?.results, ...tvData?.results ]};
   },
 });
 

@@ -1,5 +1,12 @@
 import { TButton } from "../components/Atoms/Button/types";
 
+export type RecursivePartial<T> = {
+  [P in keyof T]?:
+    T[P] extends (infer U)[] ? RecursivePartial<U>[] :
+    T[P] extends object ? RecursivePartial<T[P]> :
+    T[P];
+};
+
 export type TUser = {
   avatar: TAvatar;
   name: string;
@@ -37,7 +44,8 @@ export type TEndpointUserList = {
   imdb_id: string;
   overview: string;
   poster_path: string;
-  title: string;
+  title?: string;
+  name?: string;
   vote_average: string;
 };
 

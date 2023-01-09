@@ -78,7 +78,7 @@ const List = () => {
       <Card className="flex select-none flex-wrap items-center justify-center">
         <div className="flex items-center justify-center flex-wrap gap-5 px-4 py-8">
           {list?.list.map((item) => (
-            <CardMovie title={item.title} image={item.poster_path} />
+            <CardMovie title={`${item.title || item.name}`} image={item.poster_path} />
           ))}
         </div>
       </Card>

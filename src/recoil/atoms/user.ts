@@ -4,8 +4,8 @@ import { localStorageEffect } from "../../utils";
 import {
   TSignUpRequestBody,
   TSignInRequestBody,
-  TTmdbResult,
   TUserCreateListBody,
+  TTmdbMoviesAndTvResult,
 } from "../../interfaces/api";
 import { TInputFeedback } from "../../components/Atoms/Input/types";
 
@@ -41,7 +41,7 @@ export const atomUserLists = atom<TEndpointUserLists[]>({
   default: undefined,
 });
 
-export const atomUserCreateList = atom<TTmdbResult[]>({
+export const atomUserCreateList = atom<TTmdbMoviesAndTvResult[]>({
   key: "atomUserCreateList",
   default: [],
 });

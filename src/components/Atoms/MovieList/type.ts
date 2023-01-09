@@ -1,5 +1,5 @@
-import { TTmdbResult } from "../../../interfaces/api"
+import { TTmdbMoviesAndTvResult } from "../../../interfaces/api"
 
 export type TMovieListProps = {
-  list: TTmdbResult[],
+  list: TTmdbMoviesAndTvResult[],
 }

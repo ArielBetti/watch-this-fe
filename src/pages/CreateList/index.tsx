@@ -22,7 +22,7 @@ import {
 } from "../../components";
 
 // types
-import type { TTmdbResult } from "../../interfaces/api";
+import type { TTmdbMoviesAndTvResult } from "../../interfaces/api";
 
 // recoil: selectors
 import {
@@ -50,7 +50,7 @@ const CreateList = () => {
   const setConffetiState = useSetRecoilState(atomConfettiState);
   const [modalOpen, setModalOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [movieList, setMovieList] = useState<TTmdbResult[] | undefined>(
+  const [movieList, setMovieList] = useState<TTmdbMoviesAndTvResult[] | undefined>(
     undefined
   );
   const [sideBarOpen, setSideBarOpen] = useState(false);
@@ -63,7 +63,9 @@ const CreateList = () => {
   const setCreateListRequestBody = useSetRecoilState(
     atomUserCreateListRequestBody
   );
-  const [hashUserList, setHashUserList] = useRecoilState(atomHashUserCreateList)
+  const [hashUserList, setHashUserList] = useRecoilState(
+    atomHashUserCreateList
+  );
 
   // recoil: resets
   const resetListName = useResetRecoilState(atomUserListName);
@@ -83,7 +85,7 @@ const CreateList = () => {
     setQuery(search);
   };
 
-  const handleClickMovie = (selectedMovie: TTmdbResult) => {
+  const handleClickMovie = (selectedMovie: TTmdbMoviesAndTvResult) => {
     const isChecked = newList.find((movie) => movie.id === selectedMovie.id);
 
     if (isChecked) {
@@ -191,7 +193,7 @@ const CreateList = () => {
           <CardMovie
             key={movie.id}
             disabled={!!newList?.find((item) => item.id === movie.id)}
-            title={movie.title}
+            title={`${movie.title || movie.name}`}
             image={movie.poster_path}
             handleClick={() => handleClickMovie(movie)}
           />
