@@ -6,11 +6,20 @@ import { useRecoilState, useRecoilValue, useRecoilValueLoadable } from "recoil";
 import { PATHS } from "../../core/paths";
 
 // recoil: atoms
-import { atomUser, atomUserLists } from "../../recoil/atoms";
+import {
+  atomHashUserCreateList,
+  atomUser,
+  atomUserLists,
+} from "../../recoil/atoms";
 import { selectorGetUserLists } from "../../recoil/selectors";
 
 // components
-import { CardList, CreateListButton } from "../../components";
+import {
+  CardList,
+  CreateListButton,
+  InlineLoading,
+  Tapume,
+} from "../../components";
 
 // ::
 const Home = () => {
@@ -19,9 +28,16 @@ const Home = () => {
   // recoil: states
   const user = useRecoilValue(atomUser);
   const [userLists, setUserLists] = useRecoilState(atomUserLists);
+  const [hashUserList, setHashUserList] = useRecoilState(
+    atomHashUserCreateList
+  );
 
   // recoil: loadable
   const getUserListsLoadable = useRecoilValueLoadable(selectorGetUserLists);
+
+  const handleRetryUserList = () => {
+    setHashUserList(hashUserList + 1);
+  };
 
   useEffect(() => {
     if (
@@ -38,9 +54,20 @@ const Home = () => {
 
   return (
     <div className="container mx-auto px-4">
-      <div className="pb-10">
-        <CreateListButton />
+      <CreateListButton />
+      <div className="py-5">
+        <InlineLoading
+          text="Carregando suas listas..."
+          isLoading={getUserListsLoadable.state === "loading"}
+        />
       </div>
+      <Tapume
+        open={getUserListsLoadable.state === "hasError"}
+        title="Ops!"
+        type="error"
+        description="Ocorreu um erro."
+        handleButtonClick={() => handleRetryUserList()}
+      />
       <div className="flex flex-wrap gap-5">
         {userLists?.map((list) => (
           <CardList key={list.id} list={list} />
