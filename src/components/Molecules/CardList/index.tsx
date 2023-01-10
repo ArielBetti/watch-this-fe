@@ -36,8 +36,9 @@ const CardList = ({ list }: TCardListProps) => {
   const { events } = useDraggable(ref); // Now we pass the reference to the useDraggable hook:
 
   if (list.list.length === 0) return null;
+
   return (
-    <Card className="flex w-full flex-col gap-2 p-4 lg:max-w-xl">
+    <Card className="motion-safe:animate-fadeIn flex w-full flex-col gap-2 p-4 lg:max-w-xl">
       <div className="flex items-start gap-2">
         <ProfilePicture fallback={list.create_by} url={list?.avatar?.url} />
         <p className="max-w-[180px] truncate whitespace-nowrap text-lg md:max-w-md">
@@ -62,7 +63,7 @@ const CardList = ({ list }: TCardListProps) => {
                 src={`${IMAGE_URL}${item.poster_path}`}
               />
             ) : (
-              <div className="h-16 w-16 bg-primary shadow-sm" />
+              <div key={item.id} className="h-16 w-16 bg-primary shadow-sm" />
             )
           )}
         </div>

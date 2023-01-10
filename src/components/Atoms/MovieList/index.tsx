@@ -25,7 +25,7 @@ const MovieList = ({ list }: TMovieListProps) => {
   return (
     <div className="flex select-none flex-col items-start justify-start gap-3">
       {list.map((item) => (
-        <div className="flex w-full items-center justify-start gap-2">
+        <div key={item.id} className="flex w-full items-center justify-start gap-2">
           <div className="flex w-full items-start justify-start gap-3 rounded-md bg-white p-2 shadow-md dark:bg-zinc-800">
             {item?.poster_path ? (
               <div className="min-w-fit">

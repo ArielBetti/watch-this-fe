@@ -25,6 +25,7 @@ import CardSignUp from "./Molecules/CardSignUp";
 import CustomAvatar from "./Molecules/CustomAvatar";
 import Header from "./Molecules/Header";
 import InlineLoading from "./Molecules/InlineLoading";
+import Tapume from "./Molecules/Tapume";
 import UserMenu from "./Molecules/UserMenu";
 import WelcomeBack from "./Molecules/WelcomeBack";
 
@@ -49,6 +50,7 @@ export {
   MovieList,
   ProfilePicture,
   Sidebar,
+  Tapume,
   ThemeToggle,
   Toast,
   Tooltip,
