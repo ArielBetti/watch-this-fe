@@ -44,9 +44,14 @@ const CardList = ({ list }: TCardListProps) => {
       className="flex w-full flex-col gap-2 p-4 motion-safe:animate-fadeIn lg:max-w-xl gap-y-4"
       image={`${IMAGE_URL}${firstItem.poster_path}`}
     >
-      <h2 className="max-w-[180px] truncate whitespace-nowrap text-[#FFF] text-lg font-bold md:max-w-md">
-        {list?.title}
-      </h2>
+      <Link
+        className="text-[#FFF] transition-all"
+        to={`${PATHS.list}/${list.id}`}
+      >
+        <h2 className="max-w-[180px] truncate whitespace-nowrap text-[#FFF] text-sm md:text-lg font-bold md:max-w-md hover:text-primary-dark-contrast hover:underline">
+          {list?.title}
+        </h2>
+      </Link>
       <div className="flex items-center justify-between gap-5">
         <div
           {...events}
@@ -69,19 +74,12 @@ const CardList = ({ list }: TCardListProps) => {
       </div>      
       <div>
         <div className="flex gap-5">
-        <div className="flex items-center gap-2">
-          <ProfilePicture fallback={list.create_by} url={list?.avatar?.url} />
-          <p className="max-w-[180px] truncate whitespace-nowrap text-[#FFF] text-lg md:max-w-md">
-            {list.create_by}
-          </p>
-        </div>
-          <Link
-            className="flex items-center gap-2 text-[#FFF] transition-all hover:text-primary-dark-contrast  hover:underline"
-            to={`${PATHS.list}/${list.id}`}
-          >
-            <ArrowTopRightOnSquareIcon className="h-5 w-5" />
-            Ver lista
-          </Link>
+          <div className="flex items-center gap-2">
+            <ProfilePicture fallback={list.create_by} url={list?.avatar?.url} />
+            <p className="max-w-[180px] truncate whitespace-nowrap text-[#FFF] text-sm md:text-lg md:max-w-md">
+              {list.create_by}
+            </p>
+          </div>
           <CopyToClipboard
             text={listUrl}
             onCopy={() =>
@@ -91,17 +89,17 @@ const CardList = ({ list }: TCardListProps) => {
               })
             }
           >
-            <button className="flex items-center gap-2 text-[#FFF] transition-all hover:text-primary-dark-contrast  hover:underline">
-              <LinkIcon className="w--5 h-5" />
-              Compartilhar lista
+            <button className="flex items-center gap-2 text-[#FFF] transition-all hover:text-primary-dark-contrast  hover:underline text-xs sm:text-lg">
+              <LinkIcon className="h-3 w-3 sm:h-5 sm:w-5" />
+              Compartilhar
             </button>
           </CopyToClipboard>
           <Link
-            className="flex items-center gap-2 text-[#FFF] transition-all hover:text-primary-dark-contrast hover:underline"
+            className="flex items-center gap-2 text-[#FFF] transition-all hover:text-primary-dark-contrast hover:underline text-xs sm:text-lg"
             to={`${PATHS.editList}/${list.id}`}
           >
-            <PencilIcon className="h-5 w-5" />
-            Editar lista
+            <PencilIcon className="h-3 w-3 sm:h-5 sm:w-5" />
+            Editar
           </Link>
         </div>
       </div>
