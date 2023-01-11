@@ -29,7 +29,7 @@ const Sidebar = ({
               <Dialog.Close className="flex">
                 <XMarkIcon className="h-5 w-5" />
               </Dialog.Close>
-              <Dialog.Close className="flex">
+              <Dialog.Close asChild className="flex">
                 <Button onClick={() => handleSubmit()}>Confirmar</Button>
               </Dialog.Close>
             </div>
