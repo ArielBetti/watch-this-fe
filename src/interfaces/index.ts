@@ -1,4 +1,5 @@
 import { TButton } from "../components/Atoms/Button/types";
+import { TTmdbMoviesAndTvResult } from "./api";
 
 export type RecursivePartial<T> = {
   [P in keyof T]?:
@@ -22,13 +23,19 @@ export type TAvatar = {
   url: string;
 };
 
+export type TEndpointUserEditList = {
+  id: string;
+  title: string;
+  list: TTmdbMoviesAndTvResult[];
+}
+
 export type TEndpointUserLists = {
   id: string;
   title: string;
   create_by: string;
   create_byId: string;
   avatar: TAvatar,
-  list: TEndpointUserList[];
+  list: TTmdbMoviesAndTvResult[];
 };
 
 export type TEndpointUserList = {

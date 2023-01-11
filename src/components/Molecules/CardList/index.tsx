@@ -6,6 +6,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import {
   ArrowTopRightOnSquareIcon,
   LinkIcon,
+  PencilIcon,
 } from "@heroicons/react/24/outline";
 
 // paths
@@ -38,7 +39,7 @@ const CardList = ({ list }: TCardListProps) => {
   if (list.list.length === 0) return null;
 
   return (
-    <Card className="motion-safe:animate-fadeIn flex w-full flex-col gap-2 p-4 lg:max-w-xl">
+    <Card className="flex w-full flex-col gap-2 p-4 motion-safe:animate-fadeIn lg:max-w-xl">
       <div className="flex items-start gap-2">
         <ProfilePicture fallback={list.create_by} url={list?.avatar?.url} />
         <p className="max-w-[180px] truncate whitespace-nowrap text-lg md:max-w-md">
@@ -91,6 +92,13 @@ const CardList = ({ list }: TCardListProps) => {
               Compartilhar lista
             </button>
           </CopyToClipboard>
+          <Link
+            className="flex items-center gap-2 text-primary transition-all hover:text-primary-dark-contrast"
+            to={`${PATHS.editList}/${list.id}`}
+          >
+            <PencilIcon className="h-5 w-5" />
+            Editar lista
+          </Link>
         </div>
       </div>
     </Card>

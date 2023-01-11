@@ -9,6 +9,7 @@ import {
   atomTmdbSearch,
   atomToken,
   atomUserCreateListRequestBody,
+  atomUserEditListRequestBody,
 } from "../atoms";
 
 // api
@@ -137,4 +138,22 @@ export const selectorGetList = selectorFamily({
 
       return data;
     },
+});
+
+export const selectorPutUserEditList = selector({
+  key: "selectorPutUserEditList",
+  get: async ({ get }): Promise<TEndpointUserCreateList | undefined> => {
+    const list = get(atomUserEditListRequestBody);
+
+    if (!list || list?.list.length === 0) return;
+
+    const { data } = await requester({
+      baseURL: import.meta.env.VITE_WATCH_THIS_BASE_API,
+      headers: {
+        Authorization: get(atomToken),
+      },
+    }).put(ENDPOINTS.putUserList, list);
+
+    return data;
+  },
 });

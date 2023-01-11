@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import type { TEndpointUserLists, TUser } from "../../interfaces";
+import type { TEndpointUserEditList, TEndpointUserLists, TUser } from "../../interfaces";
 import { localStorageEffect } from "../../utils";
 import {
   TSignUpRequestBody,
@@ -51,8 +51,18 @@ export const atomUserCreateListRequestBody = atom<TUserCreateListBody>({
   default: undefined,
 });
 
+export const atomUserEditListRequestBody = atom<TEndpointUserEditList>({
+  key: "atomUserEditListRequestBody",
+  default: undefined,
+});
+
 export const atomHashUserCreateList = atom<number>({
   key: "atomHashUserCreateList",
+  default: 0,
+});
+
+export const atomHashUserEditList = atom<number>({
+  key: "atomHashEditList",
   default: 0,
 });
 

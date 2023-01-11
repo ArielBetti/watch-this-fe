@@ -5,4 +5,5 @@ export const PATHS = {
   logout: '/logout',
   createList: '/create-list',
   list: '/list',
+  editList: '/edit-list',
 };
