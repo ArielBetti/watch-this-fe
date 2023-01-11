@@ -15,20 +15,20 @@ const CardMovie = ({
   image,
 }: TCardMovieProps) => {
   return (
-    <Tooltip message={title}>
-      <div className="group relative flex h-44 w-36 shadow-md">
-        {handleClick && (
-          <button
-            onClick={() => handleClick()}
-            className="absolute -top-2 -right-2 flex h-7 w-7 items-center justify-center rounded-full border border-primary-light-contrast bg-primary text-white shadow-lg"
-          >
-            {disabled ? (
-              <MinusSmallIcon className="h-5 w-5" />
-            ) : (
-              <PlusSmallIcon className="h-5 w-5" />
-            )}
-          </button>
-        )}
+    <div className="group relative flex h-44 w-36 shadow-md">
+      {handleClick && (
+        <button
+          onClick={() => handleClick()}
+          className="absolute -top-2 -right-2 flex h-7 w-7 items-center justify-center rounded-full border border-primary-light-contrast bg-primary text-white shadow-lg"
+        >
+          {disabled ? (
+            <MinusSmallIcon className="h-5 w-5" />
+          ) : (
+            <PlusSmallIcon className="h-5 w-5" />
+          )}
+        </button>
+      )}
+      <Tooltip message={title}>
         {image ? (
           <img
             draggable={false}
@@ -41,8 +41,8 @@ const CardMovie = ({
             {title}
           </div>
         )}
-      </div>
-    </Tooltip>
+      </Tooltip>
+    </div>
   );
 };
 
