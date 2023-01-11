@@ -23,6 +23,7 @@ import type {
   TUserSignUpSuccessResponse,
 } from "../../interfaces/api";
 import { TEndpointUserLists } from "../../interfaces";
+import { atomHashList } from "../atoms/list";
 
 export const selectorSendSignIn = selector({
   key: "selectorSendSignIn",
@@ -127,7 +128,7 @@ export const selectorGetList = selectorFamily({
   get:
     (id: string) =>
     async ({ get }): Promise<TEndpointUserLists | undefined> => {
-      get(atomHashTmdbSearch);
+      get(atomHashList);
       if (!id) return;
 
       const { data } = await requester({

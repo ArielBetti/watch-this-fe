@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { useRecoilValueLoadable } from "recoil";
+import { useRecoilState, useRecoilValueLoadable } from "recoil";
 import { selectorGetList } from "../../recoil/selectors";
-import { BackdropLoader, Card, ProfilePicture } from "../../components";
+import { BackdropLoader, Card, ProfilePicture, Tapume } from "../../components";
 import { TEndpointUserLists } from "../../interfaces";
 
 import { CardMovie } from "../../components";
@@ -11,6 +11,7 @@ import * as Avatar from "@radix-ui/react-avatar";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { LinkIcon } from "@heroicons/react/24/outline";
 import { PATHS } from "../../core/paths";
+import { atomHashList } from "../../recoil/atoms/list";
 
 const List = () => {
   const { id } = useParams();
@@ -18,6 +19,15 @@ const List = () => {
 
   // local: states
   const [list, setList] = useState<TEndpointUserLists>();
+  const [error, setError] = useState({
+    title: "",
+    description: "",
+    status: false,
+    retry: false,
+  });
+
+  // recoil: states
+  const [hashList, setHashList] = useRecoilState(atomHashList);
 
   // recoil: lodables
   const getListLodable = useRecoilValueLoadable(selectorGetList(`${id}`));
@@ -26,6 +36,10 @@ const List = () => {
     PATHS.list
   }/${list?.id}`;
 
+  const handleRetryGetList = () => {
+    setHashList(hashList + 1);
+  };
+
   useEffect(() => {
     if (
       getListLodable.state === "hasValue" &&
@@ -33,14 +47,46 @@ const List = () => {
     ) {
       setList(getListLodable.contents);
     }
+    if (getListLodable.state === "hasError") {
+      if (getListLodable.contents?.response?.status === 404) {
+        const errorMessage =
+          getListLodable.contents?.response?.data?.message ||
+          "Occoreu um erro.";
+        setError({
+          title: "Ops!",
+          description: errorMessage,
+          status: true,
+          retry: false,
+        });
+      } else {
+        setError({
+          ...error,
+          title: "Ops!",
+          description: "Ocorreu um erro.",
+          status: true,
+          retry: true,
+        });
+      }
+    }
   }, [getListLodable.state, getListLodable.contents]);
 
-  if (getListLodable.state === "loading") {
-    return <BackdropLoader open />;
+  if (getListLodable.state === "hasError") {
+    return (
+      <div className="container mx-auto px-4">
+        <Tapume
+          open
+          type="error"
+          title={error.title}
+          description={error.description}
+          handleButtonClick={error.retry ? () => handleRetryGetList() : null}
+        />
+      </div>
+    );
   }
 
   return (
     <div className="container mx-auto flex flex-col gap-5 px-4 py-5">
+      <BackdropLoader open={getListLodable.state === "loading"} />
       <CopyToClipboard
         text={listUrl}
         onCopy={() =>
@@ -76,9 +122,13 @@ const List = () => {
       </div>
 
       <Card className="flex select-none flex-wrap items-center justify-center">
-        <div className="flex items-center justify-center flex-wrap gap-5 px-4 py-8">
+        <div className="flex flex-wrap items-center justify-center gap-5 px-4 py-8">
           {list?.list.map((item) => (
-            <CardMovie key={item.id} title={`${item.title || item.name}`} image={item.poster_path} />
+            <CardMovie
+              key={item.id}
+              title={`${item.title || item.name}`}
+              image={item.poster_path}
+            />
           ))}
         </div>
       </Card>
