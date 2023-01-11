@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import Confetti from "react-confetti";
 
@@ -29,7 +29,7 @@ const App = () => {
   // recoil: states
   const confettiState = useRecoilValue(atomConfettiState);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (
       theme === "dark" &&
       window.matchMedia("(prefers-color-scheme: dark)").matches
