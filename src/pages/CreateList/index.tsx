@@ -32,7 +32,6 @@ import {
 
 // recoil: atoms
 import {
-  atomConfettiState,
   atomHashTmdbSearch,
   atomHashUserCreateList,
   atomTmdbSearch,
@@ -43,16 +42,17 @@ import {
 
 // utils
 import { removeListItem } from "../../utils/removeListItem";
+import { usePushNotification } from "../../hooks/usePushNotification";
 
 // ::
 const CreateList = () => {
+  const notify = usePushNotification();
+
   // local: states
-  const setConffetiState = useSetRecoilState(atomConfettiState);
-  const [modalOpen, setModalOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [movieList, setMovieList] = useState<TTmdbMoviesAndTvResult[] | undefined>(
-    undefined
-  );
+  const [movieList, setMovieList] = useState<
+    TTmdbMoviesAndTvResult[] | undefined
+  >(undefined);
   const [sideBarOpen, setSideBarOpen] = useState(false);
 
   // recoil: states
@@ -122,9 +122,11 @@ const CreateList = () => {
       sendUserListLoadable.state === "hasValue" &&
       sendUserListLoadable.contents !== undefined
     ) {
+      notify({
+        message: `Lista ${listname} criada com sucesso`,
+        title: 'Sucesso!',
+      })
       setSideBarOpen(false);
-      setModalOpen(true);
-      setConffetiState(true);
       setHashUserList(hashUserList + 1);
 
       resetCreateListRequestBody();
@@ -146,13 +148,6 @@ const CreateList = () => {
 
   return (
     <div className="container mx-auto flex h-full flex-col items-center justify-center px-4">
-      <Modal open={modalOpen} setModalOpen={setModalOpen}>
-        <div className="flex flex-col">
-          <h1 className="text-lg font-semibold">Sucesso!</h1>
-          <p>Parabéns a {listname} foi criada com sucesso!</p>
-          <p>Acesse a página de suas listas para compartilhar com amigos!.</p>
-        </div>
-      </Modal>
       <Sidebar
         handleSubmit={() => handleSubmitList()}
         children={<MovieList list={newList} />}
