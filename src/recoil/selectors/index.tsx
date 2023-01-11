@@ -101,7 +101,7 @@ export const selectorGetTmdbByQuery = selector({
 
     const tvData = tvSearch?.data;
 
-    return {...data, results: [...data?.results, ...tvData?.results ]};
+    return { ...data, results: [...data?.results, ...tvData?.results] };
   },
 });
 
@@ -110,7 +110,7 @@ export const selectorSendUserCreateList = selector({
   get: async ({ get }): Promise<TEndpointUserCreateList | undefined> => {
     const list = get(atomUserCreateListRequestBody);
 
-    if (list.list.length === 0) return;
+    if (!list || list?.list.length === 0) return;
 
     const { data } = await requester({
       baseURL: import.meta.env.VITE_WATCH_THIS_BASE_API,

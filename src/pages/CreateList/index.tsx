@@ -20,6 +20,7 @@ import {
   Modal,
   MovieList,
   Sidebar,
+  Tapume,
 } from "../../components";
 
 // types
@@ -44,18 +45,22 @@ import {
 // utils
 import { removeListItem } from "../../utils/removeListItem";
 import { usePushNotification } from "../../hooks/usePushNotification";
+import { useNavigate } from "react-router";
+import { PATHS } from "../../core/paths";
 
 // ::
 const CreateList = () => {
+  const navigate = useNavigate();
   const notify = usePushNotification();
 
   // local: states
   const [search, setSearch] = useState("");
+  const [sendError, setSendError] = useState(false);
   const [movieList, setMovieList] = useState<
     TTmdbMoviesAndTvResult[] | undefined
   >(undefined);
   const [sideBarOpen, setSideBarOpen] = useState(false);
-  const [feedBack, setFeedback] = useState('');
+  const [feedBack, setFeedback] = useState("");
 
   // recoil: states
   const [listname, setListName] = useRecoilState(atomUserListName);
@@ -113,9 +118,9 @@ const CreateList = () => {
   };
 
   const onChangeListName = (name: string) => {
-    setFeedback('');
+    setFeedback("");
     setListName(name);
-  }
+  };
 
   useEffect(() => {
     if (
@@ -131,16 +136,25 @@ const CreateList = () => {
       sendUserListLoadable.state === "hasValue" &&
       sendUserListLoadable.contents !== undefined
     ) {
+      const listId = sendUserListLoadable.contents.id;
+
       notify({
         message: `Lista ${listname} criada com sucesso`,
         title: "Sucesso!",
       });
+
       setSideBarOpen(false);
       setHashUserList(hashUserList + 1);
 
       resetCreateListRequestBody();
       resetNewList();
       resetListName();
+
+      navigate(`${PATHS.list}/${listId}`);
+    }
+
+    if (sendUserListLoadable.state === "hasError") {
+      setSendError(true);
     }
   }, [sendUserListLoadable.state, sendUserListLoadable.contents]);
 
@@ -154,6 +168,17 @@ const CreateList = () => {
       resetNewList();
     };
   }, []);
+
+  if (sendError) {
+    return (
+      <Tapume
+        open
+        title="Ops!"
+        description="Ocorreu um erro :("
+        handleButtonClick={() => setSendError(false)}
+      />
+    );
+  }
 
   return (
     <div className="container mx-auto flex h-full flex-col items-center justify-center px-4">
@@ -177,7 +202,9 @@ const CreateList = () => {
           className="bg-transparent text-4xl font-bold outline-none placeholder:text-zinc-700 dark:placeholder:text-zinc-600"
           type="text"
         />
-        {feedBack && <p className="text-xl font-bold text-feedback-error">{feedBack}</p>}
+        {feedBack && (
+          <p className="text-xl font-bold text-feedback-error">{feedBack}</p>
+        )}
         <div className="flex items-start gap-2">
           <Input
             onChange={(e) => setSearch(e.target.value)}
