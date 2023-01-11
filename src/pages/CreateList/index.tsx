@@ -55,6 +55,7 @@ const CreateList = () => {
     TTmdbMoviesAndTvResult[] | undefined
   >(undefined);
   const [sideBarOpen, setSideBarOpen] = useState(false);
+  const [feedBack, setFeedback] = useState('');
 
   // recoil: states
   const [listname, setListName] = useRecoilState(atomUserListName);
@@ -106,8 +107,15 @@ const CreateList = () => {
         title: listname,
         list: newList,
       });
+    } else {
+      setFeedback("Escolha um nome para a lista!");
     }
   };
+
+  const onChangeListName = (name: string) => {
+    setFeedback('');
+    setListName(name);
+  }
 
   useEffect(() => {
     if (
@@ -125,8 +133,8 @@ const CreateList = () => {
     ) {
       notify({
         message: `Lista ${listname} criada com sucesso`,
-        title: 'Sucesso!',
-      })
+        title: "Sucesso!",
+      });
       setSideBarOpen(false);
       setHashUserList(hashUserList + 1);
 
@@ -149,7 +157,7 @@ const CreateList = () => {
 
   return (
     <div className="container mx-auto flex h-full flex-col items-center justify-center px-4">
-      <BackdropLoader open={sendUserListLoadable.state === 'loading'} />
+      <BackdropLoader open={sendUserListLoadable.state === "loading"} />
       <Sidebar
         handleSubmit={() => handleSubmitList()}
         children={<MovieList list={newList} />}
@@ -165,11 +173,12 @@ const CreateList = () => {
       <div className="flex w-full max-w-5xl flex-col gap-5">
         <input
           placeholder="Nome da lista"
-          onChange={(e) => setListName(e.target.value)}
+          onChange={(e) => onChangeListName(e.target.value)}
           className="bg-transparent text-4xl font-bold outline-none placeholder:text-zinc-700 dark:placeholder:text-zinc-600"
           type="text"
         />
-        <div className="flex gap-2">
+        {feedBack && <p className="text-xl font-bold text-feedback-error">{feedBack}</p>}
+        <div className="flex items-start gap-2">
           <Input
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Procure por séries ou filmes"
