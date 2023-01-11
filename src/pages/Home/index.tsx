@@ -68,6 +68,14 @@ const Home = () => {
         description="Ocorreu um erro."
         handleButtonClick={() => handleRetryUserList()}
       />
+      <Tapume
+        open={
+          getUserListsLoadable.contents !== undefined && userLists?.length === 0
+        }
+        title="Você não possui listas"
+        description="Crie uma nova para visualizar!"
+        type="empty"
+      />
       <div className="flex flex-wrap gap-5">
         {userLists?.map((list) => (
           <CardList key={list.id} list={list} />
