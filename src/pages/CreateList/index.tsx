@@ -11,6 +11,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 // components
 import {
+  BackdropLoader,
   Button,
   ButtonDone,
   CardMovie,
@@ -148,6 +149,7 @@ const CreateList = () => {
 
   return (
     <div className="container mx-auto flex h-full flex-col items-center justify-center px-4">
+      <BackdropLoader open={sendUserListLoadable.state === 'loading'} />
       <Sidebar
         handleSubmit={() => handleSubmitList()}
         children={<MovieList list={newList} />}
