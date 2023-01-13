@@ -13,8 +13,7 @@ import {
 } from "../atoms";
 
 // api
-import { requester } from "../../api/requester";
-import { ENDPOINTS } from "../../api/endpoints";
+import { watchthisApi, tmdbApi, ENDPOINTS } from "../../api";
 
 // types
 import type {
@@ -34,9 +33,7 @@ export const selectorSendSignIn = selector({
     if (!userSignUp) return;
 
     if (userSignUp) {
-      const { data } = await requester({
-        baseURL: import.meta.env.VITE_WATCH_THIS_BASE_API,
-      }).post(ENDPOINTS.login, userSignUp);
+      const { data } = await watchthisApi.post(ENDPOINTS.login, userSignUp);
 
       return data;
     }
@@ -50,9 +47,7 @@ export const selectorSendSignUp = selector({
 
     if (!userSignUp) return;
 
-    const { data } = await requester({
-      baseURL: import.meta.env.VITE_WATCH_THIS_BASE_API,
-    }).post(ENDPOINTS.register, userSignUp);
+    const { data } = await watchthisApi.post(ENDPOINTS.register, userSignUp);
 
     return data;
   },
@@ -63,12 +58,11 @@ export const selectorGetUserLists = selector({
   get: async ({ get }): Promise<TEndpointUserLists[]> => {
     get(atomHashUserCreateList);
 
-    const { data } = await requester({
-      baseURL: import.meta.env.VITE_WATCH_THIS_BASE_API,
+    const { data } = await watchthisApi.get(ENDPOINTS.getUserList, {
       headers: {
         Authorization: get(atomToken),
       },
-    }).get(ENDPOINTS.getUserList);
+    });
 
     return data;
   },
@@ -82,22 +76,12 @@ export const selectorGetTmdbByQuery = selector({
 
     if (!query) return;
 
-    const { data } = await requester({
-      baseURL: ENDPOINTS.baseUrl,
-    }).get(
-      `${ENDPOINTS.searchMovieByQuery}?api_key=${
-        import.meta.env.VITE_TMDB_API_KEY
-      }&language=pt-br&query=${query}`
+    const { data } = await tmdbApi.get(
+      `${ENDPOINTS.searchMovieByQuery}?language=pt-br&query=${query}`
     );
 
-    Promise.resolve(data);
-
-    const tvSearch = await requester({
-      baseURL: ENDPOINTS.baseUrl,
-    }).get(
-      `${ENDPOINTS.searchTvByQuery}?api_key=${
-        import.meta.env.VITE_TMDB_API_KEY
-      }&language=pt-br&query=${query}`
+    const tvSearch = await tmdbApi.get(
+      `${ENDPOINTS.searchTvByQuery}?language=pt-br&query=${query}`
     );
 
     const tvData = tvSearch?.data;
@@ -113,12 +97,11 @@ export const selectorSendUserCreateList = selector({
 
     if (!list || list?.list.length === 0) return;
 
-    const { data } = await requester({
-      baseURL: import.meta.env.VITE_WATCH_THIS_BASE_API,
+    const { data } = await watchthisApi.post(ENDPOINTS.createList, list, {
       headers: {
         Authorization: get(atomToken),
       },
-    }).post(ENDPOINTS.createList, list);
+    });
 
     return data;
   },
@@ -132,9 +115,7 @@ export const selectorGetList = selectorFamily({
       get(atomHashList);
       if (!id) return;
 
-      const { data } = await requester({
-        baseURL: import.meta.env.VITE_WATCH_THIS_BASE_API,
-      }).get(`${ENDPOINTS.getList}/?id=${id}`);
+      const { data } = await watchthisApi.get(`${ENDPOINTS.getList}/?id=${id}`);
 
       return data;
     },
@@ -147,12 +128,11 @@ export const selectorPutUserEditList = selector({
 
     if (!list || list?.list.length === 0) return;
 
-    const { data } = await requester({
-      baseURL: import.meta.env.VITE_WATCH_THIS_BASE_API,
+    const { data } = await watchthisApi.put(ENDPOINTS.putUserList, list, {
       headers: {
         Authorization: get(atomToken),
       },
-    }).put(ENDPOINTS.putUserList, list);
+    });
 
     return data;
   },
