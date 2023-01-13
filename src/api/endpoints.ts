@@ -1,5 +1,5 @@
 export const ENDPOINTS = {
-  baseUrl: 'https://api.themoviedb.org/3',
+  tmdbBaseUrl: 'https://api.themoviedb.org/3',
   searchMovieByQuery: '/search/movie', // parametro: query
   searchTvByQuery: '/search/tv', // parametro: query
   login: "/login",
