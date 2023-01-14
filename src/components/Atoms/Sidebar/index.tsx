@@ -23,8 +23,8 @@ const Sidebar = ({
       <Dialog.Trigger asChild>{triggerComponent}</Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-10 items-start justify-end bg-slate-900/80 motion-safe:animate-blurIn"></Dialog.Overlay>
-        <Dialog.Content className="fixed z-20 top-16 right-0 flex w-full border-l border-zinc-300 bg-gray-200 p-4 text-black shadow-xl motion-safe:animate-downSlide dark:border-zinc-600 dark:bg-zinc-900 dark:text-white md:max-w-2xl">
-          <div className="absolute top-0 left-0 flex w-full items-center justify-between border-b border-zinc-300 bg-white p-4 pb-5 dark:border-zinc-600 dark:bg-zinc-900">
+        <Dialog.Content className="fixed z-20 top-16 right-0 flex w-full md:border-l border-zinc-300 bg-gray-200 p-4 text-black shadow-xl motion-safe:animate-downSlide dark:border-zinc-800 dark:bg-zinc-900 dark:text-white md:max-w-2xl">
+          <div className="shadow-lg absolute top-0 left-0 flex w-full items-center justify-between border-b border-zinc-300 bg-white p-4 pb-5 dark:border-zinc-800 dark:bg-zinc-900">
             <Dialog.Close className="flex">
               <XMarkIcon className="h-5 w-5" />
             </Dialog.Close>
