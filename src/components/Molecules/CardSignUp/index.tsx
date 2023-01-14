@@ -13,7 +13,7 @@ import {
 import useConfetti from "../../../hooks/useConffeti";
 
 // components
-import { Input, Button, InlineLoading, Modal } from "../..";
+import { Input, Button, InlineLoading, Modal, BackdropLoader } from "../..";
 
 // types
 import type { TCardSignUpProps } from "./types";
@@ -102,6 +102,7 @@ const CardSignUp = ({
 
   return (
     <div className="flex w-full flex-col gap-3 rounded-md border border-zinc-300 bg-white p-4 shadow-md dark:border-zinc-600 dark:bg-zinc-800 lg:max-w-sm">
+      <BackdropLoader open={signIn.isLoading} />
       <form onSubmit={(e) => e.preventDefault()}>
         <Input
           onChange={(e) => handleChangeName(e.target.value)}
