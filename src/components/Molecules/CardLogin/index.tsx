@@ -1,5 +1,6 @@
-import { FC, memo, useEffect, useMemo, useState } from "react";
-import { useResetRecoilState, useSetRecoilState } from "recoil";
+import { memo, useMemo, useState } from "react";
+import { useSetRecoilState } from "recoil";
+import axios from "axios";
 
 import {
   ArrowRightOnRectangleIcon,
@@ -10,53 +11,49 @@ import {
 // components
 import { Button, Card, InlineLoading, Input } from "../..";
 
-// types
-import type { TCardLoginProps } from "./types";
-
 // recoil: atoms
-import { atomSignInBody } from "../../../recoil/atoms";
+import { atomToken, atomUser } from "../../../recoil/atoms";
 
 // utils
 import { getFeedbackType } from "../../../utils/getFeedbackType";
 import { useNavigate } from "react-router";
 import { PATHS } from "../../../core/paths";
+import { TInputFeedback } from "../../Atoms/Input/types";
+import { useLoginMutation } from "../../../queries/useLoginMutation";
 
 // ::
-const CardLogin: FC<TCardLoginProps> = ({ isLoading, feedback }) => {
+const CardLogin = () => {
   const navigate = useNavigate();
+
+  // local: states
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [feedback, setFeedback] = useState<TInputFeedback>();
+
+  // queries & mutations
+  const signIn = useLoginMutation((error) => {
+    if (axios.isAxiosError(error)) {
+      setFeedback({
+        message: error?.response?.data?.message || "Ocorreu um erro",
+        type: "error",
+      });
+    }
+  });
+
+  // memo: state
+  const disabledSignInButton = useMemo(
+    () => !(name && password && !signIn.isLoading),
+    [name, password]
+  );
+
   const feedBackType = useMemo(
     () => getFeedbackType(feedback?.type),
     [feedback]
   );
 
-  // local: states
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-
-  // recoil: states
-  const setSignInRequestBody = useSetRecoilState(atomSignInBody);
-  const resetSignInRequestBody = useResetRecoilState(atomSignInBody);
-
-  // memo: state
-  const disabledSignInButton = useMemo(
-    () => !(name && password && !isLoading),
-    [name, password]
-  );
-
   const handleSignInButton = () => {
-    if (!disabledSignInButton)
-      setSignInRequestBody({
-        name,
-        password,
-      });
+    if (!disabledSignInButton) signIn.mutate({ name, password });
   };
-
-  useEffect(() => {
-    resetSignInRequestBody();
-    () => {
-      resetSignInRequestBody();
-    }
-  }, []);
 
   return (
     <Card className="w-full max-w-sm py-5 px-3">
@@ -74,7 +71,7 @@ const CardLogin: FC<TCardLoginProps> = ({ isLoading, feedback }) => {
         />
       </div>
       <div className="flex flex-col gap-2 py-5">
-        {feedback && !isLoading && (
+        {feedback && !signIn.isLoading && (
           <div
             className={`${feedBackType} flex items-center justify-start gap-1`}
           >
@@ -82,7 +79,7 @@ const CardLogin: FC<TCardLoginProps> = ({ isLoading, feedback }) => {
             <p>{feedback.message}</p>
           </div>
         )}
-        <InlineLoading text="Carregando..." isLoading={isLoading} />
+        <InlineLoading text="Carregando..." isLoading={signIn.isLoading} />
       </div>
       <div className="flex flex-wrap items-center justify-start gap-2 md:flex-nowrap">
         <Button

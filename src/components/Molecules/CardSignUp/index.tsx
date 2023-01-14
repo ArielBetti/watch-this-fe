@@ -1,56 +1,84 @@
-import { FC, useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
+import { useMemo, useState, MouseEvent } from "react";
 
 // utils
 import { getFeedbackType } from "../../../utils/getFeedbackType";
 
 // icons
 import {
-  ArrowRightIcon,
   ExclamationCircleIcon,
   IdentificationIcon,
 } from "@heroicons/react/24/outline";
 
-// paths
-import { PATHS } from "../../../core/paths";
-
-// recoil: atoms
-import {
-  atomConfettiState,
-  atomSignUpBody,
-  atomSignUpFeedback,
-} from "../../../recoil/atoms";
+// hooks
+import useConfetti from "../../../hooks/useConffeti";
 
 // components
 import { Input, Button, InlineLoading, Modal } from "../..";
 
-// radix: components
-import * as Dialog from "@radix-ui/react-dialog";
-
 // types
 import type { TCardSignUpProps } from "./types";
+import { useRegisterUserMutation } from "../../../queries";
+import axios from "axios";
+import { useLoginMutation } from "../../../queries/useLoginMutation";
 
 // ::
-const CardSignUp: FC<TCardSignUpProps> = ({
+const CardSignUp = ({
   avatar,
   isLoading,
-  signUpModalOpen,
-  setSignUpModalOpen,
-}) => {
+  feedback,
+  setFeedback,
+}: TCardSignUpProps) => {
+  const confetti = useConfetti();
+
   // local: states
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 
-  // recoil: states
-  const user = useRecoilValue(atomSignUpBody);
-  const confettiState = useSetRecoilState(atomConfettiState);
-  const feedback = useRecoilValue(atomSignUpFeedback);
-  const setSignUpRequestBody = useSetRecoilState(atomSignUpBody);
-  const resetSignUpBody = useResetRecoilState(atomSignUpBody);
+  const signUp = useRegisterUserMutation();
+  const signIn = useLoginMutation((error) => {
+    if (axios.isAxiosError(error)) {
+      setFeedback({
+        message: error?.response?.data?.message || "Ocorreu um erro",
+        type: "error",
+      });
+    }
+  });
 
-  // recoil: reset
-  const resetFeedback = useResetRecoilState(atomSignUpFeedback);
+  const handleSignUp = (e: MouseEvent) => {
+    e.preventDefault();
+
+    signUp.mutate(
+      {
+        avatar,
+        name,
+        password,
+      },
+      {
+        onSuccess: () => {
+          confetti();
+          signIn.mutate({
+            name,
+            password,
+          });
+        },
+        onError: (error) => {
+          if (axios.isAxiosError(error)) {
+            if (error?.response?.data?.message) {
+              setFeedback({
+                message: `${error?.response?.data?.message}`,
+                type: "error",
+              });
+            } else {
+              setFeedback({
+                message: "",
+                type: "info",
+              });
+            }
+          }
+        },
+      }
+    );
+  };
 
   // memo: states
   const disabledSignUpButton = useMemo(
@@ -65,89 +93,54 @@ const CardSignUp: FC<TCardSignUpProps> = ({
 
   const handleChangeName = (name: string) => {
     setName(name);
-    if (feedback?.message) resetFeedback();
-  };
-
-  const handleSignUp = () => {
-    confettiState(false);
-    if (name && password && avatar) {
-      setSignUpRequestBody({
-        avatar,
-        name,
-        password,
+    if (feedback?.message)
+      setFeedback({
+        message: "",
+        type: "info",
       });
-    }
   };
-
-  useEffect(() => {
-    resetSignUpBody();
-    () => {
-      resetSignUpBody();
-    };
-  }, []);
 
   return (
     <div className="flex w-full flex-col gap-3 rounded-md border border-zinc-300 bg-white p-4 shadow-md dark:border-zinc-600 dark:bg-zinc-800 lg:max-w-sm">
-      <Input
-        onChange={(e) => handleChangeName(e.target.value)}
-        type="text"
-        label="Nome"
-        placeholder="Seu nome"
-      />
-      <Input
-        onChange={(e) => setPassword(e.target.value)}
-        type="password"
-        label="Senha"
-        placeholder="Sua senha"
-      />
-      <div className="flex flex-col gap-2 py-4">
-        {feedback?.message && !isLoading && (
-          <div
-            className={`${feedBackType} flex items-center justify-start gap-1`}
-          >
-            <ExclamationCircleIcon className="h-6 w-6" />
-            <p>{feedback.message}</p>
-          </div>
-        )}
-        <InlineLoading text="Carregando..." isLoading={isLoading} />
-      </div>
-      <div className="flex flex-wrap items-center justify-start gap-2 md:flex-nowrap">
-        <Modal
-          open={signUpModalOpen}
-          setModalOpen={setSignUpModalOpen}
-          modalTrigger={
-            <Button
-              disabled={disabledSignUpButton}
-              className="w-auto"
-              onClick={() => handleSignUp()}
+      <form onSubmit={(e) => e.preventDefault()}>
+        <Input
+          onChange={(e) => handleChangeName(e.target.value)}
+          type="text"
+          label="Nome"
+          placeholder="Seu nome"
+        />
+        <Input
+          onChange={(e) => setPassword(e.target.value)}
+          type="password"
+          label="Senha"
+          placeholder="Sua senha"
+        />
+        <div className="flex flex-col gap-2 py-4">
+          {feedback?.message && !isLoading && (
+            <div
+              className={`${feedBackType} flex items-center justify-start gap-1`}
             >
-              <IdentificationIcon className="h-5 w-5" />
-              Cadastrar
-            </Button>
-          }
-        >
-          <div className="flex-col items-start justify-start gap-2">
-            <Dialog.Title className="text-lg font-semibold">
-              Sucesso!
-            </Dialog.Title>
-            <Dialog.Description>
-              <p className="pt-6">
-                Olá <span className="font-bold text-primary">{user?.name}</span>{" "}
-                sua conta foi criada com sucesso, faça login para começar!
-              </p>
-              <div className="flex">
-                <Link
-                  to={PATHS.login}
-                  className="group flex items-center gap-2 pt-3 font-semibold text-primary transition-all hover:text-primary-dark-contrast"
-                >
-                  Ir para Login{" "}
-                  <ArrowRightIcon className="h-5 w-5 group-hover:-translate-x-1" />
-                </Link>
-              </div>
-            </Dialog.Description>
-          </div>
-        </Modal>
-      </div>
+              <ExclamationCircleIcon className="h-6 w-6" />
+              <p>{feedback.message}</p>
+            </div>
+          )}
+          <InlineLoading
+            text="Carregando..."
+            isLoading={isLoading || signUp.isLoading}
+          />
+        </div>
+        <div className="flex flex-wrap items-center justify-start gap-2 md:flex-nowrap">
+          <Button
+            type="submit"
+            disabled={disabledSignUpButton}
+            className="w-auto"
+            onClick={(e: MouseEvent) => handleSignUp(e)}
+          >
+            <IdentificationIcon className="h-5 w-5" />
+            Cadastrar
+          </Button>
+        </div>
+      </form>
     </div>
   );
 };

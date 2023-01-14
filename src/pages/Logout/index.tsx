@@ -8,7 +8,6 @@ import { PATHS } from "../../core/paths";
 // recoil: atoms
 import {
   atomSignInBody,
-  atomSignUpBody,
   atomToken,
   atomUser,
 } from "../../recoil/atoms";
@@ -28,13 +27,11 @@ const Logout = () => {
 
   // recoil: reset
   const resetSignIn = useResetRecoilState(atomSignInBody);
-  const resetSignUp = useResetRecoilState(atomSignUpBody);
 
   const logoutUser = () => {
     resetToken();
     resetUser();
     resetSignIn();
-    resetSignUp();
   };
 
   useEffect(() => {
