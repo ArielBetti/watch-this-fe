@@ -14,6 +14,7 @@ import {
   BackdropLoader,
   Button,
   ButtonDone,
+  Card,
   CardMovie,
   InlineLoading,
   Input,
@@ -26,24 +27,8 @@ import {
 // types
 import type { TTmdbMoviesAndTvResult } from "../../interfaces/api";
 
-// recoil: selectors
-import {
-  selectorGetList,
-  selectorGetTmdbByQuery,
-  selectorPutUserEditList,
-  selectorSendUserCreateList,
-} from "../../recoil/selectors";
-
 // recoil: atoms
-import {
-  atomHashTmdbSearch,
-  atomHashUserCreateList,
-  atomTmdbSearch,
-  atomUserCreateList,
-  atomUserCreateListRequestBody,
-  atomUserEditListRequestBody,
-  atomUserListName,
-} from "../../recoil/atoms";
+import { atomUserCreateList } from "../../recoil/atoms";
 
 // utils
 import { removeListItem } from "../../utils/removeListItem";
@@ -51,7 +36,14 @@ import { usePushNotification } from "../../hooks/usePushNotification";
 import { useNavigate, useParams } from "react-router";
 import { PATHS } from "../../core/paths";
 import { TContainerListProps } from "./type";
-import { TEndpointUserLists } from "../../interfaces";
+import {
+  useCreateUserListMutation,
+  useEditUserListMutation,
+  useGetListQuery,
+  useGetTmdbByQueryQuery,
+} from "../../queries";
+
+import useDebounce from "../../hooks/useDebounce";
 
 // ::
 const ContainerList = ({ type }: TContainerListProps) => {
@@ -59,63 +51,40 @@ const ContainerList = ({ type }: TContainerListProps) => {
   const navigate = useNavigate();
   const notify = usePushNotification();
 
+  // queries and mutations
+  const sendCreateList = useCreateUserListMutation();
+  const sendEditList = useEditUserListMutation();
+
   // local: states
-  const [oldList, setOldList] = useState<TEndpointUserLists>();
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
   const [sendError, setSendError] = useState(false);
-  const [movieList, setMovieList] = useState<
-    TTmdbMoviesAndTvResult[] | undefined
-  >(undefined);
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const [feedBack, setFeedback] = useState("");
+  const [listname, setListName] = useState("");
 
   // recoil: states
-  const [listname, setListName] = useRecoilState(atomUserListName);
   const [newList, setNewList] = useRecoilState(atomUserCreateList);
-  const setQuery = useSetRecoilState(atomTmdbSearch);
-  const [hashQuery, setHashQuery] = useRecoilState(atomHashTmdbSearch);
-  const setCreateListRequestBody = useSetRecoilState(
-    atomUserCreateListRequestBody
-  );
-  const setEditListRequestBody = useSetRecoilState(atomUserEditListRequestBody);
-  const [hashUserList, setHashUserList] = useRecoilState(
-    atomHashUserCreateList
-  );
 
   // recoil: resets
-  const resetListName = useResetRecoilState(atomUserListName);
   const resetNewList = useResetRecoilState(atomUserCreateList);
-  const resetCreateListRequestBody = useResetRecoilState(
-    atomUserCreateListRequestBody
-  );
-  const resetEditListRequestBody = useResetRecoilState(
-    atomUserEditListRequestBody
-  );
-  // recoil: lodables
-  const getQueryMoviesLodable = useRecoilValueLoadable(selectorGetTmdbByQuery);
-  const sendUserListLoadable = useRecoilValueLoadable(
-    selectorSendUserCreateList
-  );
-  const getListLodable = useRecoilValueLoadable(selectorGetList(`${id}`));
-  const putListEditLoadable = useRecoilValueLoadable(selectorPutUserEditList);
+
+  const getList = useGetListQuery({
+    id,
+    onSuccess: (data) => {
+      setListName(data.title);
+      setNewList(data.list);
+    },
+  });
+
+  const getByQuery = useGetTmdbByQueryQuery(debouncedSearch);
 
   // memo: states
-  const isLoading = useMemo(() => {
+  const isLoadingScreen = useMemo(() => {
     return (
-      sendUserListLoadable.state === "loading" ||
-      getListLodable.state === "loading" ||
-      putListEditLoadable.state === "loading"
+      sendCreateList?.isLoading || sendEditList?.isLoading || getList.isFetching
     );
-  }, [
-    sendUserListLoadable.state,
-    getListLodable.state,
-    putListEditLoadable.state,
-  ]);
-
-  const handleSearch = () => {
-    setHashQuery(hashQuery + 1);
-    setQuery(search);
-  };
+  }, [sendCreateList, sendEditList, getList]);
 
   const handleClickMovie = (selectedMovie: TTmdbMoviesAndTvResult) => {
     const isChecked = newList.find((movie) => movie.id === selectedMovie.id);
@@ -134,16 +103,42 @@ const ContainerList = ({ type }: TContainerListProps) => {
   const handleSubmitList = () => {
     if (listname && newList.length > 0) {
       if (type === "create") {
-        setCreateListRequestBody({
-          title: listname,
-          list: newList,
-        });
+        sendCreateList.mutate(
+          {
+            list: newList,
+            title: listname,
+          },
+          {
+            onSuccess: (data) => {
+              notify({
+                message: `Lista ${data.title} criada com sucesso`,
+                title: "Sucesso!",
+              });
+              setSideBarOpen(false);
+              resetNewList();
+              navigate(`${PATHS.list}/${data.id}`);
+            },
+          }
+        );
       } else {
-        setEditListRequestBody({
-          id: `${oldList?.id}`,
-          title: listname,
-          list: newList,
-        });
+        sendEditList.mutate(
+          {
+            id,
+            list: newList,
+            title: listname,
+          },
+          {
+            onSuccess: (data) => {
+              notify({
+                message: `Lista ${data.title} editada com sucesso`,
+                title: "Sucesso!",
+              });
+              setSideBarOpen(false);
+              resetNewList();
+              navigate(`${PATHS.list}/${data.id}`);
+            },
+          }
+        );
       }
     } else {
       setFeedback("Escolha um nome para a lista!");
@@ -156,100 +151,17 @@ const ContainerList = ({ type }: TContainerListProps) => {
   };
 
   const handleErrorRetry = () => {
-    if (type === "edit") {
-      setHashUserList(hashUserList + 1);
+    if (sendCreateList.isError) {
+      setSendError(false);
     }
-    setSendError(false);
+    if (getList.isError) {
+      getList.refetch();
+    }
   };
 
   useEffect(() => {
-    if (
-      getQueryMoviesLodable.state === "hasValue" &&
-      getQueryMoviesLodable.contents !== undefined
-    ) {
-      setMovieList(getQueryMoviesLodable.contents.results);
-    }
-  }, [getQueryMoviesLodable.state, getQueryMoviesLodable.contents]);
-
-  useEffect(() => {
-    if (
-      sendUserListLoadable.state === "hasValue" &&
-      sendUserListLoadable.contents !== undefined
-    ) {
-      const listId = sendUserListLoadable.contents.id;
-
-      notify({
-        message: `Lista ${listname} criada com sucesso`,
-        title: "Sucesso!",
-      });
-
-      setSideBarOpen(false);
-      setHashUserList(hashUserList + 1);
-
-      resetCreateListRequestBody();
-      resetNewList();
-      resetListName();
-
-      navigate(`${PATHS.list}/${listId}`);
-    }
-
-    if (sendUserListLoadable.state === "hasError") {
-      setSendError(true);
-    }
-  }, [sendUserListLoadable.state, sendUserListLoadable.contents]);
-
-  useEffect(() => {
-    if (
-      putListEditLoadable.state === "hasValue" &&
-      putListEditLoadable.contents !== undefined
-    ) {
-      const listId = `${oldList?.id}`;
-
-      notify({
-        message: `Lista ${listname} atualizada com sucesso`,
-        title: "Sucesso!",
-      });
-
-      setHashUserList(hashUserList + 1);
-      setSideBarOpen(false);
-
-      resetEditListRequestBody();
-      resetNewList();
-      resetListName();
-
-      setTimeout(() => {
-        navigate(`${PATHS.list}/${listId}`);
-      }, 1000);
-    }
-
-    if (putListEditLoadable.state === "hasError") {
-      setSendError(true);
-    }
-  }, [putListEditLoadable.state, putListEditLoadable.contents]);
-
-  useEffect(() => {
-    if (type === "edit") {
-      if (
-        getListLodable.state === "hasValue" &&
-        getListLodable.contents !== undefined
-      ) {
-        setOldList(getListLodable.contents);
-        setListName(getListLodable.contents.title);
-        setNewList(getListLodable.contents.list);
-        setMovieList(getListLodable.contents.list);
-      }
-    }
-  }, [getListLodable.contents, getListLodable.state, type]);
-
-  useEffect(() => {
-    resetCreateListRequestBody();
-    resetEditListRequestBody();
-    resetListName();
     resetNewList();
     () => {
-      resetCreateListRequestBody();
-      resetEditListRequestBody();
-      resetListName();
       resetNewList();
     };
   }, []);
@@ -267,7 +179,7 @@ const ContainerList = ({ type }: TContainerListProps) => {
 
   return (
     <div className="container mx-auto flex h-full flex-col items-center justify-center px-4">
-      <BackdropLoader open={isLoading} />
+      <BackdropLoader open={isLoadingScreen} />
       <Sidebar
         handleSubmit={() => handleSubmitList()}
         children={<MovieList list={newList} />}
@@ -296,28 +208,41 @@ const ContainerList = ({ type }: TContainerListProps) => {
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Procure por séries ou filmes"
           />
-          <Button onClick={() => handleSearch()}>
-            <MagnifyingGlassIcon className="h-5 w-5" />
-          </Button>
         </div>
-        <div className="flex w-full items-start justify-start py-5">
+        <div className="flex w-full items-start justify-start py-1">
           <InlineLoading
-            isLoading={getQueryMoviesLodable.state === "loading"}
+            isLoading={getByQuery.isFetching}
             text="Carregando..."
           />
         </div>
+        <div className="flex w-full flex-wrap items-center justify-center gap-5 pb-10">
+          {getByQuery.data?.results?.map((movie) => (
+            <CardMovie
+              key={movie.id}
+              disabled={!!newList?.find((item) => item.id === movie.id)}
+              title={`${movie.title || movie.name}`}
+              image={movie.poster_path}
+              handleClick={() => handleClickMovie(movie)}
+            />
+          ))}
+        </div>
       </div>
-      <div className="flex w-full flex-wrap items-center justify-center gap-5">
-        {movieList?.map((movie) => (
-          <CardMovie
-            key={movie.id}
-            disabled={!!newList?.find((item) => item.id === movie.id)}
-            title={`${movie.title || movie.name}`}
-            image={movie.poster_path}
-            handleClick={() => handleClickMovie(movie)}
-          />
-        ))}
-      </div>
+      {getList?.data && (
+        <div className="w-full flex-col items-start justify-start">
+          <h2 className="text-3xl font-semibold py-5">Na sua lista atual</h2>
+          <Card className="flex w-full flex-wrap items-center justify-start gap-5 p-5">
+            {getList?.data?.list?.map((movie) => (
+              <CardMovie
+                key={movie.id}
+                disabled={!!newList?.find((item) => item.id === movie.id)}
+                title={`${movie.title || movie.name}`}
+                image={movie.poster_path}
+                handleClick={() => handleClickMovie(movie)}
+              />
+            ))}
+          </Card>
+        </div>
+      )}
     </div>
   );
 };

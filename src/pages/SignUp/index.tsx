@@ -2,9 +2,6 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   useRecoilValue,
-  useRecoilValueLoadable,
-  useResetRecoilState,
-  useSetRecoilState,
 } from "recoil";
 
 // icons
@@ -13,14 +10,8 @@ import { PATHS } from "../../core/paths";
 // icons
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
-// recoil: selectors
-import { selectorSendSignUp } from "../../recoil/selectors";
-
 // recoil: atoms
 import {
-  atomConfettiState,
-  atomSignUpBody,
-  atomSignUpFeedback,
   atomUser,
 } from "../../recoil/atoms";
 
@@ -29,60 +20,21 @@ import type { TAvatar } from "../../interfaces";
 import { type TInputFeedback } from "../../components/Atoms/Input/types";
 
 // components
-import { CardSignUp, CustomAvatar, Modal } from "../../components";
+import { CardSignUp, CustomAvatar } from "../../components";
 
 // ::
 const SignOut = () => {
   const navigate = useNavigate();
 
-  // constants
-  const initialFeedbackType: TInputFeedback = {
-    message: "",
-    type: "info",
-  };
-
   // local: states
-  const [avatar, setAvatar] = useState<TAvatar | undefined>(undefined);
-  const [open, setOpen] = useState(false);
+  const [avatar, setAvatar] = useState<TAvatar>();
 
   // recoil: states
   const user = useRecoilValue(atomUser);
-  const setConfettiState = useSetRecoilState(atomConfettiState);
-  const setFeedback = useSetRecoilState(atomSignUpFeedback);
-
-  // recoil: resets
-  const resetSignUpBody = useResetRecoilState(atomSignUpBody);
-
-  // recoil: loadable
-  const signUpLoadable = useRecoilValueLoadable(selectorSendSignUp);
-
-  useEffect(() => {
-    if (signUpLoadable.state === "hasError") {
-      if (signUpLoadable.contents?.response?.data?.message) {
-        return setFeedback({
-          message: `${signUpLoadable.contents?.response?.data?.message}`,
-          type: "error",
-        });
-      }
-      setFeedback(initialFeedbackType);
-    }
-    if (
-      signUpLoadable.state === "hasValue" &&
-      signUpLoadable?.contents !== undefined
-    ) {
-      setOpen(true);
-      setConfettiState(true);
-    }
-  }, [signUpLoadable.state, signUpLoadable.contents]);
-
-  useEffect(() => {
-    resetSignUpBody();
-
-    return () => {
-      // will unmount
-      resetSignUpBody();
-    };
-  }, []);
+  const [feedback, setFeedback] = useState<TInputFeedback>({
+    message: '',
+    type: 'info',
+  });
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -107,9 +59,8 @@ const SignOut = () => {
         <CustomAvatar setConstructAvatar={setAvatar} />
         <CardSignUp
           avatar={avatar}
-          isLoading={signUpLoadable.state === "loading"}
-          signUpModalOpen={open}
-          setSignUpModalOpen={setOpen}
+          feedback={feedback}
+          setFeedback={setFeedback}
         />
       </div>
     </div>

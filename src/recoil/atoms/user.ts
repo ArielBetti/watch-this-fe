@@ -26,11 +26,6 @@ export const atomSignInBody = atom<TSignInRequestBody>({
   default: undefined,
 });
 
-export const atomSignUpBody = atom<TSignUpRequestBody>({
-  key: "atomSignUpBody",
-  default: undefined,
-});
-
 export const atomSignUpFeedback = atom<TInputFeedback | undefined>({
   key: "atomSignUpFeedback",
   default: undefined,
@@ -46,19 +41,9 @@ export const atomUserCreateList = atom<TTmdbMoviesAndTvResult[]>({
   default: [],
 });
 
-export const atomUserCreateListRequestBody = atom<TUserCreateListBody>({
-  key: "atomUserCreateListRequestBody",
-  default: undefined,
-});
-
 export const atomUserEditListRequestBody = atom<TEndpointUserEditList>({
   key: "atomUserEditListRequestBody",
   default: undefined,
-});
-
-export const atomHashUserCreateList = atom<number>({
-  key: "atomHashUserCreateList",
-  default: 0,
 });
 
 export const atomHashUserEditList = atom<number>({

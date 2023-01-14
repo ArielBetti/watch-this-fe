@@ -14,7 +14,7 @@ export type TSignInRequestBody = {
 export type TSignUpRequestBody = {
   name: string;
   password: string;
-  avatar: TAvatar;
+  avatar?: TAvatar;
 };
 
 export type TUserSignUpSuccessResponse = {
@@ -79,6 +79,7 @@ export type TEndpointUserCreateList = {
 };
 
 export type TUserCreateListBody = {
+  id?: string;
   title: string;
   list: TTmdbMoviesAndTvResult[];
 };

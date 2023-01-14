@@ -1,17 +1,16 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useRecoilState, useRecoilValue, useRecoilValueLoadable } from "recoil";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
 
 // paths
 import { PATHS } from "../../core/paths";
 
 // recoil: atoms
 import {
-  atomHashUserCreateList,
   atomUser,
   atomUserLists,
 } from "../../recoil/atoms";
-import { selectorGetUserLists } from "../../recoil/selectors";
 
 // components
 import {
@@ -21,32 +20,28 @@ import {
   Tapume,
 } from "../../components";
 
+// queries
+import { useUserListsQuery } from "../../queries";
+
 // ::
 const Home = () => {
+  const { data, isError, isLoading } = useUserListsQuery();
+
   const navigate = useNavigate();
 
   // recoil: states
   const user = useRecoilValue(atomUser);
   const [userLists, setUserLists] = useRecoilState(atomUserLists);
-  const [hashUserList, setHashUserList] = useRecoilState(
-    atomHashUserCreateList
-  );
-
-  // recoil: loadable
-  const getUserListsLoadable = useRecoilValueLoadable(selectorGetUserLists);
 
   const handleRetryUserList = () => {
-    setHashUserList(hashUserList + 1);
+    // TODO: Refazer a chamada da lista.
   };
 
   useEffect(() => {
-    if (
-      getUserListsLoadable.state === "hasValue" &&
-      getUserListsLoadable.contents !== undefined
-    ) {
-      setUserLists(getUserListsLoadable.contents);
+    if (data && !isError) {
+      setUserLists(data);
     }
-  }, [getUserListsLoadable.state]);
+  }, [data, isLoading, isError]);
 
   useEffect(() => {
     if (!user) return navigate(PATHS.login);
@@ -58,20 +53,18 @@ const Home = () => {
       <div className="py-5">
         <InlineLoading
           text="Carregando suas listas..."
-          isLoading={getUserListsLoadable.state === "loading"}
+          isLoading={isLoading}
         />
       </div>
       <Tapume
-        open={getUserListsLoadable.state === "hasError"}
+        open={isError}
         title="Ops!"
         type="error"
         description="Ocorreu um erro."
         handleButtonClick={() => handleRetryUserList()}
       />
       <Tapume
-        open={
-          getUserListsLoadable.contents !== undefined && userLists?.length === 0
-        }
+        open={data?.length === 0}
         title="Você não possui listas"
         description="Crie uma nova para visualizar!"
         type="empty"
