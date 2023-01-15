@@ -1,4 +1,5 @@
-import { useMemo, useState, MouseEvent } from "react";
+import { useMemo, useState, FormEvent } from "react";
+import axios from "axios";
 
 // utils
 import { getFeedbackType } from "../../../utils/getFeedbackType";
@@ -12,14 +13,15 @@ import {
 // hooks
 import useConfetti from "../../../hooks/useConffeti";
 
+// queries
+import { useRegisterUserMutation } from "../../../queries";
+import { useLoginMutation } from "../../../queries/useLoginMutation";
+
 // components
-import { Input, Button, InlineLoading, Modal } from "../..";
+import { Input, Button, InlineLoading } from "../..";
 
 // types
 import type { TCardSignUpProps } from "./types";
-import { useRegisterUserMutation } from "../../../queries";
-import axios from "axios";
-import { useLoginMutation } from "../../../queries/useLoginMutation";
 
 // ::
 const CardSignUp = ({
@@ -35,17 +37,26 @@ const CardSignUp = ({
   const [password, setPassword] = useState("");
 
   const signUp = useRegisterUserMutation();
-  const signIn = useLoginMutation((error) => {
-    if (axios.isAxiosError(error)) {
-      setFeedback({
-        message: error?.response?.data?.message || "Ocorreu um erro",
-        type: "error",
-      });
-    }
-  });
+  const signIn = useLoginMutation();
 
-  const handleSignUp = (e: MouseEvent) => {
-    e.preventDefault();
+  const handleError = (error: unknown) => {
+    if (axios.isAxiosError(error)) {
+      if (error?.response?.data?.message) {
+        setFeedback({
+          message: error.response.data.message,
+          type: "error",
+        });
+      } else {
+        setFeedback({
+          message: "Ocorreu um erro",
+          type: "error",
+        });
+      }
+    }
+  };
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
 
     signUp.mutate(
       {
@@ -56,26 +67,15 @@ const CardSignUp = ({
       {
         onSuccess: () => {
           confetti();
-          signIn.mutate({
-            name,
-            password,
-          });
+          signIn.mutate(
+            {
+              name,
+              password,
+            },
+            { onError: handleError }
+          );
         },
-        onError: (error) => {
-          if (axios.isAxiosError(error)) {
-            if (error?.response?.data?.message) {
-              setFeedback({
-                message: `${error?.response?.data?.message}`,
-                type: "error",
-              });
-            } else {
-              setFeedback({
-                message: "",
-                type: "info",
-              });
-            }
-          }
-        },
+        onError: handleError,
       }
     );
   };
@@ -102,18 +102,20 @@ const CardSignUp = ({
 
   return (
     <div className="flex w-full flex-col gap-3 rounded-md border border-zinc-300 bg-white p-4 shadow-md dark:border-zinc-600 dark:bg-zinc-800 lg:max-w-sm">
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={handleSubmit}>
         <Input
           onChange={(e) => handleChangeName(e.target.value)}
           type="text"
           label="Nome"
           placeholder="Seu nome"
+          autoComplete="name"
         />
         <Input
           onChange={(e) => setPassword(e.target.value)}
           type="password"
           label="Senha"
           placeholder="Sua senha"
+          autoComplete="new-password"
         />
         <div className="flex flex-col gap-2 py-4">
           {feedback?.message && !isLoading && (
@@ -134,7 +136,6 @@ const CardSignUp = ({
             type="submit"
             disabled={disabledSignUpButton}
             className="w-auto"
-            onClick={(e: MouseEvent) => handleSignUp(e)}
           >
             <IdentificationIcon className="h-5 w-5" />
             Cadastrar

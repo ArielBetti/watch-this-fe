@@ -6,7 +6,7 @@ import { atomToken, atomUser } from "../recoil/atoms";
 import { useNavigate } from "react-router";
 import { PATHS } from "../core/paths";
 
-export const useLoginMutation = (onError?: (error: any) => void) => {
+export const useLoginMutation = () => {
   const navigate = useNavigate();
 
   // recoil: states
@@ -21,6 +21,5 @@ export const useLoginMutation = (onError?: (error: any) => void) => {
       setUser(data.user);
       navigate(PATHS.home);
     },
-    onError,
   });
 };
