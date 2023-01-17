@@ -10,5 +10,6 @@ export const useUserListsQuery = () => {
   return useQuery({
     queryKey: ["user_lists"],
     queryFn: () => getUserList(token),
+    staleTime: 1000 * 60 * 3, // 3 min
   });
 };

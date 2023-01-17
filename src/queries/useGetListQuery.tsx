@@ -22,5 +22,6 @@ export const useGetListQuery = ({
     onSuccess,
     onError,
     enabled: !!id,
+    staleTime: 1000 * 60 * 3 // 3 min
   });
 };
