@@ -37,14 +37,17 @@ import {
   useCreateUserListMutation,
   useEditUserListMutation,
   useGetListQuery,
+  useUserListsQuery,
   useGetTmdbByQueryQuery,
 } from '../../queries';
+import { useQueryClient } from '@tanstack/react-query';
 
 // ::
 const ContainerList = ({ type }: TContainerListProps) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const notify = usePushNotification();
+  const clientQuery = useQueryClient();
 
   // queries and mutations
   const sendCreateList = useCreateUserListMutation();
@@ -103,12 +106,16 @@ const ContainerList = ({ type }: TContainerListProps) => {
           },
           {
             onSuccess: (data) => {
+              clientQuery.invalidateQueries({
+                queryKey: ['user_lists'],
+              });
               notify({
                 message: `Lista ${data.title} criada com sucesso`,
                 title: 'Sucesso!',
               });
               setSideBarOpen(false);
               resetNewList();
+
               navigate(`${PATHS.list}/${data.id}`);
             },
           }
@@ -122,6 +129,9 @@ const ContainerList = ({ type }: TContainerListProps) => {
           },
           {
             onSuccess: (data) => {
+              clientQuery.invalidateQueries({
+                queryKey: ['user_lists'],
+              });
               notify({
                 message: `Lista ${data.title} editada com sucesso`,
                 title: 'Sucesso!',
