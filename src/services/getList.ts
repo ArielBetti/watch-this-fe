@@ -8,7 +8,7 @@ export const getList = async (id: string | undefined): Promise<TEndpointUserList
   const { data } = await requester({
     baseURL: import.meta.env.VITE_WATCH_THIS_BASE_API,
 
-  }).get(`${ENDPOINTS.getList}?id=${id}`);
+  }).get<TEndpointUserLists>(`${ENDPOINTS.getList}?id=${id}`);
 
   return data;
 };

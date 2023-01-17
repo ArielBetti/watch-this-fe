@@ -30,4 +30,6 @@ const ButtonDone = forwardRef<HTMLButtonElement, TButtonDoneProps>(
   )
 );
 
+ButtonDone.displayName = 'ButtonDone';
+
 export default ButtonDone;

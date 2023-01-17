@@ -12,7 +12,7 @@ import { useNavigate } from "react-router";
 // components
 import Button from "../../Atoms/Button";
 
-
+// paths
 import { PATHS } from "../../../core/paths";
 
 // ::

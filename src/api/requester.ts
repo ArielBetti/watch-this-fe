@@ -1,15 +1,15 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
-export const requester = (config: any, contentType?: string): any => {
+export const requester = (config: AxiosRequestConfig, contentType?: string) => {
   const service = axios.create({
     baseURL: config.baseURL,
-    ...config.options,
+    ...config,
   });
 
   service.interceptors.request.use(
     (req) => {
       req.headers = {
-        "Content-Type": contentType || "application/json",
+        'Content-Type': contentType || 'application/json',
         ...config.headers,
       };
 
@@ -21,11 +21,8 @@ export const requester = (config: any, contentType?: string): any => {
   service.interceptors.response.use(
     (res) => res,
     (error) => {
-      if (
-        error.response.status === 401 &&
-        window.location.pathname !== "/logout"
-      ) {
-         window.location.href = "/logout";
+      if (error.response.status === 401 && window.location.pathname !== '/logout') {
+        window.location.href = '/logout';
       }
 
       return Promise.reject(error);
@@ -49,8 +46,8 @@ export const requester = (config: any, contentType?: string): any => {
       const response = await service.patch<T>(uri, data);
       return response;
     },
-    async delete<T>(uri: string, data: any): Promise<AxiosResponse<T>> {
-      const response = await service.delete<T>(uri, data);
+    async delete<T>(uri: string, data: unknown): Promise<AxiosResponse<T>> {
+      const response = await service.delete<T>(uri, { data });
       return response;
     },
   };

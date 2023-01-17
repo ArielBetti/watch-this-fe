@@ -8,7 +8,7 @@ export const getUserList = async (token: string): Promise<TEndpointUserLists[]> 
     headers: {
       Authorization: token,
     },
-  }).get(`${ENDPOINTS.getUserList}`);
+  }).get<TEndpointUserLists[]>(`${ENDPOINTS.getUserList}`);
 
   return data;
 };

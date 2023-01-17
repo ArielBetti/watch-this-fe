@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-
+import { useRecoilValue } from "recoil";
 import { Link } from "react-router-dom";
 
 // paths
@@ -7,7 +7,8 @@ import { PATHS } from "../../../core/paths";
 
 // components
 import { Logo, ThemeToggle, UserMenu } from "../..";
-import { useRecoilValue } from "recoil";
+
+// recoil: atoms
 import { atomUser } from "../../../recoil/atoms";
 
 // ::

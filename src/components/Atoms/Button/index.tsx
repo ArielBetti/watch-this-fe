@@ -20,4 +20,6 @@ const Button = forwardRef<HTMLButtonElement, TButton>(
   }
 );
 
+Button.displayName = 'Button';
+
 export default Button;

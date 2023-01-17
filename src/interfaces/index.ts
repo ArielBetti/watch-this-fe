@@ -1,4 +1,5 @@
 import { TButton } from "../components/Atoms/Button/types";
+import { TAvatarAccessoires, TAvatarEyes, TAvatarEyesBrow, TAvatarMouth, TAvatarSkinColor } from "../components/Molecules/CustomAvatar/types";
 import { TTmdbMoviesAndTvResult } from "./api";
 
 export type RecursivePartial<T> = {
@@ -14,11 +15,11 @@ export type TUser = {
 };
 
 export type TAvatar = {
-  accessoires: string[];
-  backgroundColor: string;
-  eyes: string[];
-  eyebrows: string[];
-  mouth: string[];
+  accessoires?: TAvatarAccessoires;
+  backgroundColor: TAvatarSkinColor;
+  eyes: TAvatarEyes;
+  eyebrows: TAvatarEyesBrow;
+  mouth: TAvatarMouth;
   flip: boolean;
   url: string;
 };

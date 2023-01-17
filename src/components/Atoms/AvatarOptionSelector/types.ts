@@ -1,8 +1,8 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from 'react';
 
-export type TAvatarOptionSelector = {
-  options: string[];
-  currentOption: string[];
-  setCurrentOption: Dispatch<SetStateAction<any>>;
+export type TAvatarOptionsSelector<T> = {
+  options: T[];
   label: string;
+  currentOption: string[];
+  setCurrentOption: Dispatch<SetStateAction<T[]>>;
 };

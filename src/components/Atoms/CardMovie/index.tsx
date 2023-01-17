@@ -8,6 +8,7 @@ import Tooltip from "../Tooltip";
 // constants
 import { IMAGE_URL } from "../../../constants";
 
+// ::
 const CardMovie = ({
   disabled,
   handleClick,

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useMemo, useState, FormEvent } from "react";
 import axios from "axios";
 
@@ -13,7 +14,7 @@ import {
 // hooks
 import useConfetti from "../../../hooks/useConffeti";
 
-// queries
+// queries and mutations
 import { useRegisterUserMutation } from "../../../queries";
 import { useLoginMutation } from "../../../queries/useLoginMutation";
 
@@ -36,6 +37,7 @@ const CardSignUp = ({
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 
+  // queries & mutations
   const signUp = useRegisterUserMutation();
   const signIn = useLoginMutation();
 

@@ -12,7 +12,7 @@ export const putUserListEdit = async (
     headers: {
       Authorization: token,
     },
-  }).put(`${ENDPOINTS.putUserList}`, body);
+  }).put<TEndpointUserCreateList>(`${ENDPOINTS.putUserList}`, body);
 
   return data;
 };

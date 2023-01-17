@@ -1,49 +1,44 @@
-import { useState, useEffect, useMemo } from "react";
-import {
-  useRecoilState,
-  useRecoilValueLoadable,
-  useResetRecoilState,
-  useSetRecoilState,
-} from "recoil";
-
-// icons
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { useState, useEffect, useMemo } from 'react';
+import { useNavigate, useParams } from 'react-router';
+import { useRecoilState, useResetRecoilState } from 'recoil';
 
 // components
 import {
   BackdropLoader,
-  Button,
   ButtonDone,
   Card,
   CardMovie,
   InlineLoading,
   Input,
-  Modal,
   MovieList,
   Sidebar,
   Tapume,
-} from "../../components";
+} from '../../components';
 
 // types
-import type { TTmdbMoviesAndTvResult } from "../../interfaces/api";
+import type { TTmdbMoviesAndTvResult } from '../../interfaces/api';
+import type { TContainerListProps } from './type';
 
 // recoil: atoms
-import { atomUserCreateList } from "../../recoil/atoms";
+import { atomUserCreateList } from '../../recoil/atoms';
 
 // utils
-import { removeListItem } from "../../utils/removeListItem";
-import { usePushNotification } from "../../hooks/usePushNotification";
-import { useNavigate, useParams } from "react-router";
-import { PATHS } from "../../core/paths";
-import { TContainerListProps } from "./type";
+import { removeListItem } from '../../utils/removeListItem';
+
+// hooks
+import { usePushNotification } from '../../hooks/usePushNotification';
+import useDebounce from '../../hooks/useDebounce';
+
+// paths
+import { PATHS } from '../../core/paths';
+
+// queries and mutations
 import {
   useCreateUserListMutation,
   useEditUserListMutation,
   useGetListQuery,
   useGetTmdbByQueryQuery,
-} from "../../queries";
-
-import useDebounce from "../../hooks/useDebounce";
+} from '../../queries';
 
 // ::
 const ContainerList = ({ type }: TContainerListProps) => {
@@ -56,12 +51,12 @@ const ContainerList = ({ type }: TContainerListProps) => {
   const sendEditList = useEditUserListMutation();
 
   // local: states
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
   const [sendError, setSendError] = useState(false);
   const [sideBarOpen, setSideBarOpen] = useState(false);
-  const [feedBack, setFeedback] = useState("");
-  const [listname, setListName] = useState("");
+  const [feedBack, setFeedback] = useState('');
+  const [listname, setListName] = useState('');
 
   // recoil: states
   const [newList, setNewList] = useRecoilState(atomUserCreateList);
@@ -81,9 +76,7 @@ const ContainerList = ({ type }: TContainerListProps) => {
 
   // memo: states
   const isLoadingScreen = useMemo(() => {
-    return (
-      sendCreateList?.isLoading || sendEditList?.isLoading || getList.isFetching
-    );
+    return sendCreateList?.isLoading || sendEditList?.isLoading || getList.isFetching;
   }, [sendCreateList, sendEditList, getList]);
 
   const handleClickMovie = (selectedMovie: TTmdbMoviesAndTvResult) => {
@@ -102,7 +95,7 @@ const ContainerList = ({ type }: TContainerListProps) => {
 
   const handleSubmitList = () => {
     if (listname && newList.length > 0) {
-      if (type === "create") {
+      if (type === 'create') {
         sendCreateList.mutate(
           {
             list: newList,
@@ -112,7 +105,7 @@ const ContainerList = ({ type }: TContainerListProps) => {
             onSuccess: (data) => {
               notify({
                 message: `Lista ${data.title} criada com sucesso`,
-                title: "Sucesso!",
+                title: 'Sucesso!',
               });
               setSideBarOpen(false);
               resetNewList();
@@ -131,7 +124,7 @@ const ContainerList = ({ type }: TContainerListProps) => {
             onSuccess: (data) => {
               notify({
                 message: `Lista ${data.title} editada com sucesso`,
-                title: "Sucesso!",
+                title: 'Sucesso!',
               });
               setSideBarOpen(false);
               resetNewList();
@@ -141,12 +134,12 @@ const ContainerList = ({ type }: TContainerListProps) => {
         );
       }
     } else {
-      setFeedback("Escolha um nome para a lista!");
+      setFeedback('Escolha um nome para a lista!');
     }
   };
 
   const onChangeListName = (name: string) => {
-    setFeedback("");
+    setFeedback('');
     setListName(name);
   };
 
@@ -164,6 +157,7 @@ const ContainerList = ({ type }: TContainerListProps) => {
     () => {
       resetNewList();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (sendError) {
@@ -182,16 +176,14 @@ const ContainerList = ({ type }: TContainerListProps) => {
       <BackdropLoader open={isLoadingScreen} />
       <Sidebar
         handleSubmit={() => handleSubmitList()}
-        children={<MovieList list={newList} />}
         open={sideBarOpen}
         setSideBarOpen={setSideBarOpen}
         triggerComponent={
-          <ButtonDone
-            onClick={() => setSideBarOpen(true)}
-            counter={newList.length}
-          />
+          <ButtonDone onClick={() => setSideBarOpen(true)} counter={newList.length} />
         }
-      />
+      >
+        <MovieList list={newList} />
+      </Sidebar>
       <div className="flex w-full max-w-5xl flex-col gap-5">
         <input
           placeholder="Nome da lista"
@@ -200,9 +192,7 @@ const ContainerList = ({ type }: TContainerListProps) => {
           className="bg-transparent text-4xl font-bold outline-none placeholder:text-zinc-700 dark:placeholder:text-zinc-600"
           type="text"
         />
-        {feedBack && (
-          <p className="text-xl font-bold text-feedback-error">{feedBack}</p>
-        )}
+        {feedBack && <p className="text-xl font-bold text-feedback-error">{feedBack}</p>}
         <div className="flex items-start gap-2">
           <Input
             onChange={(e) => setSearch(e.target.value)}
@@ -210,10 +200,7 @@ const ContainerList = ({ type }: TContainerListProps) => {
           />
         </div>
         <div className="flex w-full items-start justify-start py-1">
-          <InlineLoading
-            isLoading={getByQuery.isFetching}
-            text="Carregando..."
-          />
+          <InlineLoading isLoading={getByQuery.isFetching} text="Carregando..." />
         </div>
         <div className="flex w-full flex-wrap items-center justify-center gap-5 pb-10">
           {getByQuery.data?.results?.map((movie) => (
@@ -229,7 +216,7 @@ const ContainerList = ({ type }: TContainerListProps) => {
       </div>
       {getList?.data && (
         <div className="w-full flex-col items-start justify-start">
-          <h2 className="text-3xl font-semibold py-5">Na sua lista atual</h2>
+          <h2 className="py-5 text-3xl font-semibold">Na sua lista atual</h2>
           <Card className="flex w-full flex-wrap items-center justify-start gap-5 p-5">
             {getList?.data?.list?.map((movie) => (
               <CardMovie

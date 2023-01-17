@@ -22,12 +22,21 @@ import { type TInputFeedback } from "../../components/Atoms/Input/types";
 // components
 import { CardSignUp, CustomAvatar } from "../../components";
 
+const initialState: TAvatar = {
+  backgroundColor: [],
+  eyebrows: [],
+  eyes: [],
+  flip: true,
+  mouth: [],
+  url: '',
+}
+
 // ::
 const SignOut = () => {
   const navigate = useNavigate();
 
   // local: states
-  const [avatar, setAvatar] = useState<TAvatar>();
+  const [avatar, setAvatar] = useState<TAvatar>(initialState);
 
   // recoil: states
   const user = useRecoilValue(atomUser);
@@ -42,6 +51,7 @@ const SignOut = () => {
 
   useEffect(() => {
     if (user) navigate(PATHS.home);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (

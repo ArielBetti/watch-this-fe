@@ -65,7 +65,7 @@ export type TTmdbResult = {
   vote_count: number;
 };
 
-export type TTmdbMoviesAndTvResult = {} & TTmdbTVResult & TTmdbResult;
+export type TTmdbMoviesAndTvResult = unknown & TTmdbTVResult & TTmdbResult;
 
 export type TEndpointUserCreateList = {
   id: string;

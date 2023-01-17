@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { createAvatar } from "@dicebear/avatars";
 import { stringify } from "qs";
@@ -38,11 +38,13 @@ const CustomAvatar = ({
   const AVATAR_BASE_URL = "https://avatars.dicebear.com/api/adventurer-neutral";
 
   // local: states
-  const [eyes, setEyes] = useState<TAvatarEyes | any>([]);
-  const [eyesBrows, setEyesBrows] = useState<TAvatarEyesBrow | any>([]);
-  const [mouth, setMouth] = useState<TAvatarMouth | any>([]);
-  const [skinColor, setSkinColor] = useState<TAvatarSkinColor | any>([]);
-  const [accessoires, setAccessoires] = useState<TAvatarAccessoires | any>([]);
+  const [eyes, setEyes] = useState<TAvatarEyes>([]);
+  const [eyesBrows, setEyesBrows] = useState<TAvatarEyesBrow>([]);
+  const [mouth, setMouth] = useState<TAvatarMouth>([]);
+  const [skinColor, setSkinColor] = useState<TAvatarSkinColor>([]);
+
+  // TODO: Passar tipagem correta
+  const [accessoires, setAccessoires] = useState<TAvatarAccessoires | any[]>([]);
 
   // recoil: states
   const user = useRecoilValue(atomUser);
@@ -52,7 +54,7 @@ const CustomAvatar = ({
 
   const getAvatarSvg = () => {
     return createAvatar(style, {
-      accessoires: accessoires?.[0] ? accessoires : ["birthmark"],
+      accessoires: accessoires,
       accessoiresProbability,
       eyes: eyes || null,
       eyebrows: eyesBrows || null,
@@ -65,7 +67,7 @@ const CustomAvatar = ({
   };
 
   const getAvatarUrl = () => {
-    let params = stringify(
+    const params = stringify(
       {
         accessoires: accessoires?.[0] ? accessoires : ["birthmark"],
         accessoiresProbability,
@@ -98,6 +100,7 @@ const CustomAvatar = ({
       flip: true,
       url: avatarURL,
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eyes, eyesBrows, mouth, setConstructAvatar, skinColor, accessoires]);
 
   useEffect(() => {
@@ -106,10 +109,11 @@ const CustomAvatar = ({
       setEyes([user?.avatar?.eyes?.[0]]);
       setEyesBrows([user?.avatar?.eyebrows?.[0]]);
       setMouth([user?.avatar?.mouth?.[0]]);
-      setAccessoires([user?.avatar?.accessoires?.[0]]);
+      setAccessoires(user?.avatar?.accessoires?.[0] ? [user?.avatar?.accessoires?.[0]] : []);
     } else {
       getAvatarSvg();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (
@@ -124,7 +128,7 @@ const CustomAvatar = ({
         <AvatarOptionSelector
           label="Acessórios"
           setCurrentOption={setAccessoires}
-          options={AVATAR_ACCESSOIRES}
+          options={['',...AVATAR_ACCESSOIRES]}
           currentOption={accessoires}
         />
         <AvatarOptionSelector

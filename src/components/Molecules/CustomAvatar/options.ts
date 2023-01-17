@@ -1,5 +1,6 @@
-export const AVATAR_ACCESSOIRES = [
-  "",
+import { TAvatarAccessoires, TAvatarEyes, TAvatarEyesBrow, TAvatarMouth, TAvatarSkinColor } from "./types";
+
+export const AVATAR_ACCESSOIRES: TAvatarAccessoires = [
   "sunglasses",
   "glasses",
   "smallGlasses",
@@ -8,7 +9,7 @@ export const AVATAR_ACCESSOIRES = [
   "birthmark",
 ];
 
-export const AVATAR_EYES = [
+export const AVATAR_EYES: TAvatarEyes = [
   "variant26",
   "variant25",
   "variant24",
@@ -37,14 +38,14 @@ export const AVATAR_EYES = [
   "variant01",
 ];
 
-export const AVATAR_SKIN_COLOR = [
+export const AVATAR_SKIN_COLOR: TAvatarSkinColor = [
   "variant02",
   "variant03",
   "variant04",
   "variant05",
 ];
 
-export const AVATAR_EYESBROWS = [
+export const AVATAR_EYESBROWS: TAvatarEyesBrow = [
   "variant10",
   "variant09",
   "variant08",
@@ -57,7 +58,7 @@ export const AVATAR_EYESBROWS = [
   "variant01",
 ];
 
-export const AVATAR_MOUTH = [
+export const AVATAR_MOUTH: TAvatarMouth = [
   "variant30",
   "variant29",
   "variant28",

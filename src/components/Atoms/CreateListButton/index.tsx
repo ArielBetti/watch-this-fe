@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 
+// icons
+import { PlusSmallIcon } from "@heroicons/react/24/outline";
+
 // paths
 import { PATHS } from "../../../core/paths";
-import { PlusSmallIcon } from "@heroicons/react/24/outline";
 
 // ::
 const CreateListButton = () => {

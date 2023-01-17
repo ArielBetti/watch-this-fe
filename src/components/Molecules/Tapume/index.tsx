@@ -28,7 +28,7 @@ const Tapume = ({
 
   return (
     <div className="flex flex-col items-center justify-center gap-5 text-center motion-safe:animate-fadeIn">
-      <img src={asset?.[type]} className="h-72 w-72" />
+      <img src={asset?.[type]} className="h-72 w-72" alt="Ilustração" />
       <h1 className="text-4xl font-semibold">{title}</h1>
       <p className="text-lg text-zinc-800 dark:text-zinc-400">{description}</p>
       {handleButtonClick && (

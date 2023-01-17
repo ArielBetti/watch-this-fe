@@ -33,7 +33,7 @@ const MovieList = ({ list }: TMovieListProps) => {
                   draggable={false}
                   className="h-14 w-12 rounded-md shadow-md"
                   src={`${IMAGE_URL}${item.poster_path}`}
-                  alt={`Poster image of ${item?.name || item.title}`}
+                  alt={`Poster of ${item?.name || item.title}`}
                 />
               </div>
             ) : (

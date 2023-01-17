@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+// TODO: Make a correct interface
 export const localStorageEffect =
   (key: string | any) =>
   ({ setSelf, onSet }: any) => {

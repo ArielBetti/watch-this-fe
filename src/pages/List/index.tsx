@@ -1,19 +1,30 @@
 import { useState } from "react";
 import { useParams } from "react-router";
-import { useRecoilState } from "recoil";
-import { BackdropLoader, Card, Tapume } from "../../components";
-
-import { CardMovie } from "../../components";
-import { usePushNotification } from "../../hooks/usePushNotification";
-import * as Avatar from "@radix-ui/react-avatar";
 import CopyToClipboard from "react-copy-to-clipboard";
+
+// icons
 import { LinkIcon } from "@heroicons/react/24/outline";
+
+// radix: components
+import * as Avatar from "@radix-ui/react-avatar";
+
+// components
+import { BackdropLoader, Card, CardMovie, Tapume } from "../../components";
+
+// hooks
+import { usePushNotification } from "../../hooks/usePushNotification";
+
+// paths
 import { PATHS } from "../../core/paths";
-import { atomHashList } from "../../recoil/atoms/list";
+
+// queries and mutations
 import { useGetListQuery } from "../../queries";
 
+// ::
 const List = () => {
   const { id } = useParams();
+
+  // queries & mutations
   const pushNotification = usePushNotification();
 
   const getList = useGetListQuery({
@@ -21,10 +32,10 @@ const List = () => {
     onError: (error) => {
       if (error?.response?.status === 404) {
         const errorMessage =
-          error?.response?.data?.message || "Occoreu um erro.";
+          error?.response?.data || "Occoreu um erro.";
         setError({
           title: "Ops!",
-          description: errorMessage,
+          description: `${errorMessage}`,
           status: true,
           retry: false,
         });
@@ -48,13 +59,12 @@ const List = () => {
      retry: false,
   });
 
-  // recoil: states
-  const [hashList, setHashList] = useRecoilState(atomHashList);
-
+  // constants
   const listUrl = `${import.meta.env.VITE_WATCH_THIS_FE_BASE_URL}${
     PATHS.list
   }/${getList.data?.id}`;
 
+  // handles
   const handleRetryGetList = () => {
     getList.refetch();
   };

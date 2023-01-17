@@ -1,42 +1,43 @@
-import { FormEvent, memo, useMemo, useState } from "react";
-import axios from "axios";
+import { FormEvent, memo, useMemo, useState } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
+// icons
 import {
   ArrowRightOnRectangleIcon,
   IdentificationIcon,
   ExclamationCircleIcon,
-} from "@heroicons/react/24/outline";
+} from '@heroicons/react/24/outline';
 
 // components
-import { Button, Card, InlineLoading, Input } from "../..";
+import { Button, Card, InlineLoading, Input } from '../..';
 
 // utils
-import { getFeedbackType } from "../../../utils/getFeedbackType";
-import { PATHS } from "../../../core/paths";
-import { TInputFeedback } from "../../Atoms/Input/types";
-import { useLoginMutation } from "../../../queries/useLoginMutation";
-import { Link } from "react-router-dom";
+import { getFeedbackType } from '../../../utils/getFeedbackType';
+
+// paths
+import { PATHS } from '../../../core/paths';
+
+// types
+import { TInputFeedback } from '../../Atoms/Input/types';
+
+// queries and mutations
+import { useLoginMutation } from '../../../queries/useLoginMutation';
 
 // ::
 const CardLogin = () => {
   // local: states
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
   const [feedback, setFeedback] = useState<TInputFeedback>();
 
   // queries & mutations
   const signIn = useLoginMutation();
 
   // memo: state
-  const disabledSignInButton = useMemo(
-    () => !(name && password),
-    [name, password]
-  );
+  const disabledSignInButton = useMemo(() => !(name && password), [name, password]);
 
-  const feedBackType = useMemo(
-    () => getFeedbackType(feedback?.type),
-    [feedback]
-  );
+  const feedBackType = useMemo(() => getFeedbackType(feedback?.type), [feedback]);
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -48,8 +49,8 @@ const CardLogin = () => {
         onError: (error) => {
           if (axios.isAxiosError(error)) {
             setFeedback({
-              message: error?.response?.data?.message || "Ocorreu um erro",
-              type: "error",
+              message: error?.response?.data?.message || 'Ocorreu um erro',
+              type: 'error',
             });
           }
         },
@@ -77,9 +78,7 @@ const CardLogin = () => {
         </div>
         <div className="flex flex-col gap-2 py-5">
           {feedback && !signIn.isLoading && (
-            <div
-              className={`${feedBackType} flex items-center justify-start gap-1`}
-            >
+            <div className={`${feedBackType} flex items-center justify-start gap-1`}>
               <ExclamationCircleIcon className="h-6 w-6" />
               <p>{feedback.message}</p>
             </div>

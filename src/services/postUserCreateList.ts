@@ -12,7 +12,7 @@ export const postUserCreateList = async (
     headers: {
       Authorization: token,
     },
-  }).post(`${ENDPOINTS.createList}`, body);
+  }).post<TEndpointUserCreateList>(`${ENDPOINTS.createList}`, body);
 
   return data;
 };

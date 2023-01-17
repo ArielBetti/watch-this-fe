@@ -1,18 +1,18 @@
 import { useCallback, useMemo } from "react";
 
 // types
-import type { TAvatarOptionSelector } from "./types";
+import type { TAvatarOptionsSelector } from "./types";
 
 // icons
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 
 // ::
-const AvatarOptionSelector = ({
+const AvatarOptionSelector = <T,>({
   currentOption,
   label,
   options,
   setCurrentOption,
-}: TAvatarOptionSelector) => {
+}: TAvatarOptionsSelector<T>) => {
   // memo: states
   const getIndex = useMemo(() => {
     const getCurrntIndex = options.findIndex(

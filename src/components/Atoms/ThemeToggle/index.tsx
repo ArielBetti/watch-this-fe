@@ -18,6 +18,7 @@ const ThemeToggle = () => {
   // callbacks
   const onToggle = useCallback(() => {
     setTheme(theme === "dark" ? "light" : "dark");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme]);
 
   return (

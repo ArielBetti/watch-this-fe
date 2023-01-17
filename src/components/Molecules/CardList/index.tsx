@@ -1,10 +1,10 @@
 import { type MutableRefObject, useRef } from "react";
 import { Link } from "react-router-dom";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { useDraggable } from "react-use-draggable-scroll";
 
 // icons
 import {
-  ArrowTopRightOnSquareIcon,
   LinkIcon,
   PencilIcon,
 } from "@heroicons/react/24/outline";
@@ -15,13 +15,13 @@ import { PATHS } from "../../../core/paths";
 // constants
 import { IMAGE_URL } from "../../../constants";
 
-import { useDraggable } from "react-use-draggable-scroll";
-
 // types
 import type { TCardListProps } from "./types";
 
 // components
 import { Card, ProfilePicture } from "../..";
+
+// hooks
 import { usePushNotification } from "../../../hooks/usePushNotification";
 
 // ::
@@ -65,6 +65,7 @@ const CardList = ({ list }: TCardListProps) => {
                 key={item.id}
                 draggable={false}
                 src={`${IMAGE_URL}${item.poster_path}`}
+                alt={`Imagem poster do(a) ${item.name}`}
               />
             ) : (
               <div key={item.id} className="h-16 w-16 bg-primary shadow-sm" />

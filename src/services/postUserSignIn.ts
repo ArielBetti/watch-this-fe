@@ -10,7 +10,7 @@ export const postSignIn = async (
 ): Promise<TUserSignInSuccessResponse> => {
   const { data } = await requester({
     baseURL: import.meta.env.VITE_WATCH_THIS_BASE_API,
-  }).post(`${ENDPOINTS.login}`, body);
+  }).post<TUserSignInSuccessResponse>(`${ENDPOINTS.login}`, body);
 
   return data;
 };
