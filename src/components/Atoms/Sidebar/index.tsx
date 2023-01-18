@@ -1,14 +1,14 @@
 // icons
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 // radix: components
-import * as Dialog from "@radix-ui/react-dialog";
+import * as Dialog from '@radix-ui/react-dialog';
 
 // components
-import { Button } from "../..";
+import { Button, ScrollArea } from '../..';
 
 // types
-import { TSidebarProps } from "./types";
+import { TSidebarProps } from './types';
 
 // ::
 const Sidebar = ({
@@ -22,21 +22,19 @@ const Sidebar = ({
     <Dialog.Root open={open} onOpenChange={setSideBarOpen}>
       <Dialog.Trigger asChild>{triggerComponent}</Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-10 items-start justify-end bg-slate-900/80 motion-safe:animate-blurIn"></Dialog.Overlay>
-        <Dialog.Content className="fixed z-20 top-16 right-0 flex w-full md:border-l border-zinc-300 bg-gray-200 p-4 text-black shadow-xl motion-safe:animate-downSlide dark:border-zinc-800 dark:bg-zinc-900 dark:text-white md:max-w-2xl">
-          <div className="shadow-lg absolute top-0 left-0 flex w-full items-center justify-between border-b border-zinc-300 bg-white p-4 pb-5 dark:border-zinc-800 dark:bg-zinc-900">
-            <Dialog.Close className="flex">
+        <Dialog.Overlay className="fixed inset-0 bg-slate-900/80 motion-safe:animate-blurIn" />
+        <Dialog.Content className="fixed top-16 bottom-0 right-0 z-10 h-full max-h-full w-full border-zinc-300 bg-gray-200 text-black shadow-xl dark:border-zinc-800 dark:bg-zinc-900 dark:text-white md:max-w-2xl md:border-l">
+          <div className="flex w-full items-center justify-between border-b border-zinc-300 bg-white p-4 pb-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:shadow-lg">
+            <Dialog.Close className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-800">
               <XMarkIcon className="h-5 w-5" />
             </Dialog.Close>
             <Dialog.Close asChild className="flex">
-              <Button onClick={() => handleSubmit()}>Confirmar</Button>
+              <Button onClick={handleSubmit}>Confirmar</Button>
             </Dialog.Close>
           </div>
-          <div className="min-h-screen w-full pt-20">
-            <div className="h-[80vh] w-full overflow-y-scroll scrollbar-hide">
-              {children}
-            </div>
-          </div>
+          <ScrollArea>
+            <div className="p-4 pb-40">{children}</div>
+          </ScrollArea>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

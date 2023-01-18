@@ -16,6 +16,7 @@ import ThemeToggle from "./Atoms/ThemeToggle";
 import Toast from "./Atoms/Toast";
 import Tooltip from "./Atoms/Tooltip";
 import Welcome from "./Atoms/Welcome";
+import ScrollArea from './Atoms/ScrollArea'
 
 // molecules
 import BackdropLoader from "./Molecules/BackdropLoader";
@@ -57,4 +58,5 @@ export {
   UserMenu,
   Welcome,
   WelcomeBack,
+  ScrollArea
 };
