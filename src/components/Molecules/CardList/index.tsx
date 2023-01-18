@@ -2,11 +2,13 @@ import { type MutableRefObject, useRef } from "react";
 import { Link } from "react-router-dom";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useDraggable } from "react-use-draggable-scroll";
+import { useQueryClient } from "@tanstack/react-query";
 
 // icons
 import {
   LinkIcon,
   PencilIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
 
 // paths
@@ -24,13 +26,19 @@ import { Card, ProfilePicture } from "../..";
 // hooks
 import { usePushNotification } from "../../../hooks/usePushNotification";
 
+// queries and mutations
+import { useDeleteUserList } from "../../../queries";
+
 // ::
 const CardList = ({ list }: TCardListProps) => {
   const pushNotification = usePushNotification();
 
-  const listUrl = `${import.meta.env.VITE_WATCH_THIS_FE_BASE_URL}${
-    PATHS.list
-  }/${list.id}`;
+  // queties & mutations
+  const queryClient = useQueryClient();
+  const removeList = useDeleteUserList();
+
+  const listUrl = `${import.meta.env.VITE_WATCH_THIS_FE_BASE_URL}${PATHS.list
+    }/${list.id}`;
 
   // refs
   const ref = useRef<HTMLDivElement>() as MutableRefObject<HTMLInputElement>;
@@ -72,9 +80,9 @@ const CardList = ({ list }: TCardListProps) => {
             )
           )}
         </div>
-      </div>      
+      </div>
       <div>
-        <div className="flex gap-5">
+        <div className="flex gap-5 flex-wrap">
           <div className="flex items-center gap-2">
             <ProfilePicture fallback={list.create_by} url={list?.avatar?.url} />
             <p className="max-w-[180px] truncate whitespace-nowrap text-[#FFF] text-sm md:text-lg md:max-w-md">
@@ -102,6 +110,30 @@ const CardList = ({ list }: TCardListProps) => {
             <PencilIcon className="h-3 w-3 sm:h-5 sm:w-5" />
             Editar
           </Link>
+          <button
+            aria-label={`Clique para remover a sua lista "${list.title}"`}
+            onClick={() => removeList.mutate({
+              id: list.id
+            }, {
+              onSuccess: () => {
+                queryClient.invalidateQueries({
+                  queryKey: ['user_lists']
+                })
+                pushNotification({
+                  title: `Lista "${list.title}" removida com sucesso`,
+                  message: "",
+                })
+              },
+              onError: () => pushNotification({
+                title: `Erro!`,
+                message: "Ocorreu um erro ao tentar remover a lista.",
+              })
+            })}
+            className="flex items-center gap-2 text-[#FFF] transition-all hover:text-primary-dark-contrast hover:underline text-xs sm:text-lg"
+          >
+            <TrashIcon className="h-3 w-3 sm:h-5 sm:w-5" />
+            Remover
+          </button>
         </div>
       </div>
     </Card>

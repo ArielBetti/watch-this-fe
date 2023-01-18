@@ -67,6 +67,8 @@ export type TTmdbResult = {
 
 export type TTmdbMoviesAndTvResult = unknown & TTmdbTVResult & TTmdbResult;
 
+export type TEndPointUserDeleteListSuccessResponse = { message: string };
+
 export type TEndpointUserCreateList = {
   id: string;
   title: string;
