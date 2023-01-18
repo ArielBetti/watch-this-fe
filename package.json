@@ -3,6 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "contributes": [
+    "ArielBetti <ariel.betti@gmail.com>",
+    "joaom00 <joaom00.dev@gmail.com>",
+    "lucasvsouza28 <lucasvsouza28@gmail.com>"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
