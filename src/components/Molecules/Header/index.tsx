@@ -21,7 +21,7 @@ const Header = () => {
   ), [user]);
 
   return (
-    <div className="fixed left-0 top-0 z-20 h-16 w-full border-b border-zinc-300 bg-white shadow-md dark:border-zinc-600 dark:bg-zinc-800">
+    <div className="fixed left-0 top-0 z-20 h-16 w-full border-b border-zinc-300 bg-white shadow-md dark:border-zinc-600 dark:bg-zinc-800 pointer-events-auto">
       <div className="container mx-auto flex h-full items-center justify-between px-4">
         <Link to={logoPath}>
           <Logo />
