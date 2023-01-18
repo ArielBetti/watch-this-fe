@@ -145,6 +145,7 @@ const ContainerList = ({ type }: TContainerListProps) => {
       }
     } else {
       setFeedback('Escolha um nome para a lista!');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
