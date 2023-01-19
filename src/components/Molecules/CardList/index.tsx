@@ -30,12 +30,8 @@ import { usePushNotification } from "../../../hooks/usePushNotification";
 import { useDeleteUserList } from "../../../queries";
 
 // ::
-const CardList = ({ list }: TCardListProps) => {
+const CardList = ({ list, handleRemoveList }: TCardListProps) => {
   const pushNotification = usePushNotification();
-
-  // queties & mutations
-  const queryClient = useQueryClient();
-  const removeList = useDeleteUserList();
 
   const listUrl = `${import.meta.env.VITE_WATCH_THIS_FE_BASE_URL}${PATHS.list
     }/${list.id}`;
@@ -112,23 +108,7 @@ const CardList = ({ list }: TCardListProps) => {
           </Link>
           <button
             aria-label={`Clique para remover a sua lista "${list.title}"`}
-            onClick={() => removeList.mutate({
-              id: list.id
-            }, {
-              onSuccess: () => {
-                queryClient.invalidateQueries({
-                  queryKey: ['user_lists']
-                })
-                pushNotification({
-                  title: `Lista "${list.title}" removida com sucesso`,
-                  message: "",
-                })
-              },
-              onError: () => pushNotification({
-                title: `Erro!`,
-                message: "Ocorreu um erro ao tentar remover a lista.",
-              })
-            })}
+            onClick={() => handleRemoveList({ id: list?.id, title: list.title })}
             className="flex items-center gap-2 text-[#FFF] transition-all hover:text-primary-dark-contrast hover:underline text-xs sm:text-lg"
           >
             <TrashIcon className="h-3 w-3 sm:h-5 sm:w-5" />

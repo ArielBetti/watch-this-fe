@@ -6,12 +6,39 @@ import {
   Tapume,
 } from "../../components";
 
+// types
+import { TCardListHandleRemoveListProps } from "../../components/Molecules/CardList/types";
+
+// hooks
+import { usePushNotification } from "../../hooks/usePushNotification";
+
 // queries
-import { useUserListsQuery } from "../../queries";
+import { useDeleteUserList, useUserListsQuery } from "../../queries";
 
 // ::
 const Home = () => {
   const userLists = useUserListsQuery();
+
+  const pushNotification = usePushNotification();
+
+  // queties & mutations
+  const removeList = useDeleteUserList();
+  const removeListById = ({id, title}: TCardListHandleRemoveListProps) => {
+    removeList.mutate({
+      id: id
+    }, {
+      onSuccess: () => {
+        pushNotification({
+          title: `Lista "${title}" removida com sucesso`,
+          message: "",
+        })
+      },
+      onError: () => pushNotification({
+        title: `Erro!`,
+        message: "Ocorreu um erro ao tentar remover a lista.",
+      })
+    })
+  }
 
   const handleRetryUserList = () => {
     userLists.refetch();
@@ -41,7 +68,7 @@ const Home = () => {
       />
       <div className="flex flex-wrap gap-5">
         {userLists?.data?.map((list) => (
-          <CardList key={list.id} list={list} />
+          <CardList handleRemoveList={removeListById} key={list.id} list={list} />
         ))}
       </div>
     </div>
