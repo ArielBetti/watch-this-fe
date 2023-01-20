@@ -1,4 +1,3 @@
-import { useRecoilValue } from "recoil";
 import { Link } from "react-router-dom";
 
 // paths
@@ -10,16 +9,16 @@ import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/outline";
 // radix: components
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
-// recoil: states
-import { atomUser } from "../../../recoil/atoms";
+// zustand: hooks
+import { useUser } from "../../../stores";
 
 // components
 import { ProfilePicture } from "../../";
 
 // ::
 const UserMenu = () => {
-  // recoil: states
-  const user = useRecoilValue(atomUser);
+  // zustand: states
+  const user = useUser();
 
   if (!user) return null;
 

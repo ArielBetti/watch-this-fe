@@ -1,11 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { useRecoilValue } from "recoil";
-import { atomToken } from "../recoil/atoms";
 import { postUserCreateList } from "../services";
 import { TUserCreateListBody } from "../interfaces/api";
+import { useToken } from "../stores";
 
 export const useCreateUserListMutation = () => {
-  const token = useRecoilValue(atomToken);
+  const token = useToken()
 
   // Queries
   return useMutation({

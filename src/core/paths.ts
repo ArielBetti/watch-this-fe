@@ -6,4 +6,4 @@ export const PATHS = {
   createList: '/create-list',
   list: '/list',
   editList: '/edit-list',
-};
+} as const;

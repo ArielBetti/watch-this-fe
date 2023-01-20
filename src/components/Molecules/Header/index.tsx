@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { useRecoilValue } from "recoil";
 import { Link } from "react-router-dom";
 
 // paths
@@ -8,13 +7,13 @@ import { PATHS } from "../../../core/paths";
 // components
 import { Logo, ThemeToggle, UserMenu } from "../..";
 
-// recoil: atoms
-import { atomUser } from "../../../recoil/atoms";
+// zustand: hooks
+import { useUser } from "../../../stores";
 
 // ::
 const Header = () => {
-  // recoil: states
-  const user = useRecoilValue(atomUser);
+  // zustand: states
+  const user = useUser()
 
   const logoPath = useMemo(() => (
     user ? PATHS.home : PATHS.login

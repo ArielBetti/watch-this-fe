@@ -1,11 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import { useRecoilValue } from "recoil";
-import { createAvatar } from "@dicebear/avatars";
-import { stringify } from "qs";
-import * as style from "@dicebear/adventurer-neutral";
-
-// recoil: atoms
-import { atomUser } from "../../../recoil/atoms";
+import { useEffect, useMemo, useState } from 'react';
+import { createAvatar } from '@dicebear/avatars';
+import { stringify } from 'qs';
+import * as style from '@dicebear/adventurer-neutral';
 
 // types
 import type {
@@ -15,10 +11,13 @@ import type {
   TAvatarMouth,
   TAvatarSkinColor,
   TCustomAvatarProps,
-} from "./types";
+} from './types';
+
+// zustand: hooks
+import { useUser } from '../../../stores';
 
 // recoil: atoms
-import AvatarOptionSelector from "../../Atoms/AvatarOptionSelector";
+import AvatarOptionSelector from '../../Atoms/AvatarOptionSelector';
 
 // constants
 import {
@@ -27,15 +26,12 @@ import {
   AVATAR_EYESBROWS,
   AVATAR_MOUTH,
   AVATAR_SKIN_COLOR,
-} from "./options";
+} from './options';
 
 // ::
-const CustomAvatar = ({
-  seed = "WatchThis",
-  setConstructAvatar,
-}: TCustomAvatarProps) => {
+const CustomAvatar = ({ seed = 'WatchThis', setConstructAvatar }: TCustomAvatarProps) => {
   // CONSTANTS
-  const AVATAR_BASE_URL = "https://avatars.dicebear.com/api/adventurer-neutral";
+  const AVATAR_BASE_URL = 'https://avatars.dicebear.com/api/adventurer-neutral';
 
   // local: states
   const [eyes, setEyes] = useState<TAvatarEyes>([]);
@@ -46,11 +42,11 @@ const CustomAvatar = ({
   // TODO: Passar tipagem correta
   const [accessoires, setAccessoires] = useState<TAvatarAccessoires | any[]>([]);
 
-  // recoil: states
-  const user = useRecoilValue(atomUser);
+  // zustand: states
+  const user = useUser();
 
   // memo: states
-  const accessoiresProbability = useMemo(() => (accessoires?.[0] ? 100 : 0), [accessoires])
+  const accessoiresProbability = useMemo(() => (accessoires?.[0] ? 100 : 0), [accessoires]);
 
   const getAvatarSvg = () => {
     return createAvatar(style, {
@@ -69,7 +65,7 @@ const CustomAvatar = ({
   const getAvatarUrl = () => {
     const params = stringify(
       {
-        accessoires: accessoires?.[0] ? accessoires : ["birthmark"],
+        accessoires: accessoires?.[0] ? accessoires : ['birthmark'],
         accessoiresProbability,
         backgroundColor: skinColor || null,
         eyes: eyes || null,
@@ -79,11 +75,11 @@ const CustomAvatar = ({
       },
       {
         encodeValuesOnly: true,
-        arrayFormat: "brackets",
+        arrayFormat: 'brackets',
       }
     );
 
-    return `${AVATAR_BASE_URL}/${encodeURIComponent(seed || "watchThis")}.svg${
+    return `${AVATAR_BASE_URL}/${encodeURIComponent(seed || 'watchThis')}.svg${
       params ? `?${params}` : null
     }`;
   };
@@ -100,7 +96,7 @@ const CustomAvatar = ({
       flip: true,
       url: avatarURL,
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eyes, eyesBrows, mouth, setConstructAvatar, skinColor, accessoires]);
 
   useEffect(() => {
@@ -113,22 +109,22 @@ const CustomAvatar = ({
     } else {
       getAvatarSvg();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (
-    <div className="select-none md:max-w-xs p-5 bg-white border-zinc-300 dark:bg-zinc-800 rounded-md border dark:border-zinc-600 shadow-lg flex flex-col gap-2 items-center justify-center">
+    <div className="flex select-none flex-col items-center justify-center gap-2 rounded-md border border-zinc-300 bg-white p-5 shadow-lg dark:border-zinc-600 dark:bg-zinc-800 md:max-w-xs">
       <img
         draggable={false}
-        className="w-44 h-44 rounded-lg shadow-lg"
+        className="h-44 w-44 rounded-lg shadow-lg"
         src={getAvatarSvg()}
         alt=""
       />
-      <div className="flex pt-6 flex-wrap items-center justify-center gap-2">
+      <div className="flex flex-wrap items-center justify-center gap-2 pt-6">
         <AvatarOptionSelector
           label="Acessórios"
           setCurrentOption={setAccessoires}
-          options={['',...AVATAR_ACCESSOIRES]}
+          options={['', ...AVATAR_ACCESSOIRES]}
           currentOption={accessoires}
         />
         <AvatarOptionSelector

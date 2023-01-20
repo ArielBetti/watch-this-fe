@@ -1,9 +1,16 @@
-import ContainerList from '../../container/List'
+import { Navigate, useLocation } from 'react-router-dom';
+import ContainerList from '../../container/List';
+import { useUser } from '../../stores';
 
 const CreateList = () => {
-  return (
-    <ContainerList type='create' />
-  )
-}
+  const user = useUser();
+  const location = useLocation()
 
-export default CreateList
+  if (!user) {
+    return <Navigate to="/" replace state={{from: location}} />;
+  }
+
+  return <ContainerList type="create" />;
+};
+
+export default CreateList;

@@ -1,26 +1,21 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  useRecoilValue,
-} from "recoil";
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 // icons
-import { PATHS } from "../../core/paths";
+import { PATHS } from '../../core/paths';
 
 // icons
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 
-// recoil: atoms
-import {
-  atomUser,
-} from "../../recoil/atoms";
+// zustand: hooks
+import { useUser } from '../../stores';
 
 // types
-import type { TAvatar } from "../../interfaces";
-import { type TInputFeedback } from "../../components/Atoms/Input/types";
+import type { TAvatar } from '../../interfaces';
+import { type TInputFeedback } from '../../components/Atoms/Input/types';
 
 // components
-import { CardSignUp, CustomAvatar } from "../../components";
+import { CardSignUp, CustomAvatar } from '../../components';
 
 const initialState: TAvatar = {
   backgroundColor: [],
@@ -29,7 +24,7 @@ const initialState: TAvatar = {
   flip: true,
   mouth: [],
   url: '',
-}
+};
 
 // ::
 const SignOut = () => {
@@ -37,22 +32,21 @@ const SignOut = () => {
 
   // local: states
   const [avatar, setAvatar] = useState<TAvatar>(initialState);
-
-  // recoil: states
-  const user = useRecoilValue(atomUser);
   const [feedback, setFeedback] = useState<TInputFeedback>({
     message: '',
     type: 'info',
   });
 
+  // zustand: states
+  const user = useUser();
+
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
   useEffect(() => {
     if (user) navigate(PATHS.home);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [user, navigate]);
 
   return (
     <div className="container mx-auto flex flex-col gap-6 px-4">
@@ -67,11 +61,7 @@ const SignOut = () => {
       </div>
       <div className="flex flex-wrap items-start justify-center gap-10">
         <CustomAvatar setConstructAvatar={setAvatar} />
-        <CardSignUp
-          avatar={avatar}
-          feedback={feedback}
-          setFeedback={setFeedback}
-        />
+        <CardSignUp avatar={avatar} feedback={feedback} setFeedback={setFeedback} />
       </div>
     </div>
   );
