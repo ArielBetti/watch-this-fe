@@ -41,7 +41,8 @@
     "react-use-draggable-scroll": "^0.4.7",
     "recoil": "^0.7.6",
     "tailwind-scrollbar-hide": "^1.1.7",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "zustand": "^4.3.2"
   },
   "devDependencies": {
     "@types/qs": "^6.9.7",

@@ -1,10 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUserList } from "../services";
-import { useRecoilValue } from "recoil";
-import { atomToken } from "../recoil/atoms";
+import { useToken } from "../stores";
 
 export const useUserListsQuery = () => {
-  const token = useRecoilValue(atomToken);
+  const token = useToken();
 
   // Queries
   return useQuery({

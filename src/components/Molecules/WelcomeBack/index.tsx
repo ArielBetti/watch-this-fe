@@ -1,32 +1,32 @@
-import { useMemo } from "react";
-import { useRecoilValue } from "recoil";
+import { useMemo } from 'react';
 
 // radix: components
-import * as Avatar from "@radix-ui/react-avatar";
+import * as Avatar from '@radix-ui/react-avatar';
 
-// recoil: atoms
-import { atomUser } from "../../../recoil/atoms";
+// zustand: hooks
+import { useUser } from '../../../stores';
 
-import { useNavigate } from "react-router";
+import { useNavigate } from 'react-router';
 
 // components
-import Button from "../../Atoms/Button";
+import Button from '../../Atoms/Button';
 
 // paths
-import { PATHS } from "../../../core/paths";
+import { PATHS } from '../../../core/paths';
 
 // ::
 const WelcomeBack = () => {
   const navigate = useNavigate();
 
   // recoil: states
-  const user = useRecoilValue(atomUser);
+  const user = useUser();
 
   // memo: states
   const userFallback = useMemo(() => {
-    const [firstName, lastName] = user.name.split(" ");
+    if (!user) return '';
+    const [firstName, lastName] = user.name.split(' ');
     const firstNameFirstLetter = firstName?.charAt(0);
-    const lastNameFirstLetter = lastName?.charAt(0) || "";
+    const lastNameFirstLetter = lastName?.charAt(0) || '';
     const fallbackName = `${firstNameFirstLetter} ${lastNameFirstLetter}`;
 
     return fallbackName.toUpperCase();
@@ -38,7 +38,7 @@ const WelcomeBack = () => {
         <Avatar.Root className="flex h-44 w-44 select-none items-center overflow-hidden rounded-lg align-middle">
           <Avatar.Image
             className="h-full w-full object-cover shadow-md"
-            src={user.avatar.url}
+            src={user?.avatar.url}
             alt={`user profile picture`}
           />
           <Avatar.Fallback
@@ -50,12 +50,8 @@ const WelcomeBack = () => {
         </Avatar.Root>
       </div>
       <div className="flex flex-col gap-3">
-        <Button onClick={() => navigate(PATHS.home)}>
-          Continuar como {user.name}
-        </Button>
-        <Button onClick={() => navigate(PATHS.logout)}>
-          Entrar com outra conta
-        </Button>
+        <Button onClick={() => navigate(PATHS.home)}>Continuar como {user?.name}</Button>
+        <Button onClick={() => navigate(PATHS.logout)}>Entrar com outra conta</Button>
       </div>
     </div>
   );

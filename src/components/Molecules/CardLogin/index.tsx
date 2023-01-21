@@ -43,9 +43,7 @@ const CardLogin = () => {
     event.preventDefault();
     if (signIn.isLoading) return;
 
-    signIn.mutate(
-      { name, password },
-      {
+    signIn.mutate({ name, password }, {
         onError: (error) => {
           if (axios.isAxiosError(error)) {
             setFeedback({

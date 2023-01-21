@@ -1,25 +1,24 @@
-import { useMutation } from "@tanstack/react-query";
-import { TSignInRequestBody } from "../interfaces/api";
-import { postSignIn } from "../services/postUserSignIn";
-import { useSetRecoilState } from "recoil";
-import { atomToken, atomUser } from "../recoil/atoms";
-import { useNavigate } from "react-router";
-import { PATHS } from "../core/paths";
+import { useMutation } from '@tanstack/react-query';
+import { postSignIn } from '../services/postUserSignIn';
+import { useLocation, useNavigate } from 'react-router';
+import { PATHS } from '../core/paths';
+import { useAuthActions } from '../stores';
 
 export const useLoginMutation = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || PATHS.home;
 
-  // recoil: states
-  const setUser = useSetRecoilState(atomUser);
-  const setToken = useSetRecoilState(atomToken);
+  // zustand: actions
+  const { setUser, setToken } = useAuthActions();
 
   // Queries
   return useMutation({
-    mutationFn: (body?: TSignInRequestBody | undefined) => postSignIn(body),
+    mutationFn: postSignIn,
     onSuccess: (data) => {
       setToken(data.token);
       setUser(data.user);
-      navigate(PATHS.home);
+      navigate(from, { replace: true });
     },
   });
 };

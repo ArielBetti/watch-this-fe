@@ -1,44 +1,40 @@
 // components
-import {
-  CardList,
-  CreateListButton,
-  InlineLoading,
-  Tapume,
-} from "../../components";
+import { CardList, CreateListButton, InlineLoading, Tapume } from '../../components';
 
 // types
-import { TCardListHandleRemoveListProps } from "../../components/Molecules/CardList/types";
+import { TCardListHandleRemoveListProps } from '../../components/Molecules/CardList/types';
 
 // hooks
-import { usePushNotification } from "../../hooks/usePushNotification";
+import { usePushNotification } from '../../hooks/usePushNotification';
 
 // queries
-import { useDeleteUserList, useUserListsQuery } from "../../queries";
+import { useDeleteUserList, useUserListsQuery } from '../../queries';
 
 // ::
 const Home = () => {
   const userLists = useUserListsQuery();
-
   const pushNotification = usePushNotification();
 
   // queties & mutations
   const removeList = useDeleteUserList();
-  const removeListById = ({id, title}: TCardListHandleRemoveListProps) => {
-    removeList.mutate({
-      id: id
-    }, {
-      onSuccess: () => {
-        pushNotification({
-          title: `Lista "${title}" removida com sucesso`,
-          message: "",
-        })
-      },
-      onError: () => pushNotification({
-        title: `Erro!`,
-        message: "Ocorreu um erro ao tentar remover a lista.",
-      })
-    })
-  }
+  const removeListById = ({ id, title }: TCardListHandleRemoveListProps) => {
+    removeList.mutate(
+      { id: id },
+      {
+        onSuccess: () => {
+          pushNotification({
+            title: `Lista "${title}" removida com sucesso`,
+            message: '',
+          });
+        },
+        onError: () =>
+          pushNotification({
+            title: `Erro!`,
+            message: 'Ocorreu um erro ao tentar remover a lista.',
+          }),
+      }
+    );
+  };
 
   const handleRetryUserList = () => {
     userLists.refetch();
@@ -48,10 +44,7 @@ const Home = () => {
     <div className="container mx-auto px-4">
       <CreateListButton />
       <div className="py-5">
-        <InlineLoading
-          text="Carregando suas listas..."
-          isLoading={userLists.isLoading}
-        />
+        <InlineLoading text="Carregando suas listas..." isLoading={userLists.isLoading} />
       </div>
       <Tapume
         open={userLists.isError}

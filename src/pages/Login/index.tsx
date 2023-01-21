@@ -1,17 +1,13 @@
-import {
-  useRecoilValue,
-} from "recoil";
-
-// recoil: atoms
-import { atomUser } from "../../recoil/atoms";
+// zustand: hooks
+import { useUser } from "../../stores";
 
 // components
 import { CardLogin, Welcome, WelcomeBack } from "../../components";
 
 // ::
 const Login = () => {
-  // recoil: states
-  const user = useRecoilValue(atomUser);
+  // zustand: states
+  const user = useUser();
 
   return (
     <div className="container mx-auto flex w-full flex-col items-center justify-center gap-10 px-4 lg:flex-row">
