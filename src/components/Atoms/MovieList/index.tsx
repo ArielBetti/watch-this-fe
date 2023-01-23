@@ -1,25 +1,14 @@
-import { useRecoilState } from "recoil";
-
 // icons
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { TrashIcon } from '@heroicons/react/24/outline';
 
 // contants
-import { IMAGE_URL } from "../../../constants";
+import { IMAGE_URL } from '../../../constants';
 
 // types
-import type { TMovieListProps } from "./type";
-
-// recoil: atoms
-import { atomUserCreateList } from "../../../recoil/atoms";
-
-// utils
-import { removeListItem } from "../../../utils/removeListItem";
+import type { TMovieListProps } from './type';
 
 // ::
-const MovieList = ({ list }: TMovieListProps) => {
-  // recoil: states
-  const [itemsList, setItemsList] = useRecoilState(atomUserCreateList);
-
+const MovieList = ({ list, onDeleteMovie }: TMovieListProps) => {
   if (!list) return null;
 
   return (
@@ -42,14 +31,8 @@ const MovieList = ({ list }: TMovieListProps) => {
             <p className="line-clamp-2">{item.title || item.name}</p>
           </div>
           <button
-            onClick={() =>
-              removeListItem({
-                item,
-                setState: setItemsList,
-                state: itemsList,
-              })
-            }
-            className="group flex-1 transition-colors hover:text-feedback-error"
+            onClick={() => onDeleteMovie(item)}
+            className="flex-1 transition-colors hover:text-feedback-error"
           >
             <TrashIcon className="h-5 w-5" />
           </button>

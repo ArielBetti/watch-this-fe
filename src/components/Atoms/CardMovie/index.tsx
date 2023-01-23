@@ -1,33 +1,25 @@
 // types
-import { TCardMovieProps } from "./type";
+import { TCardMovieProps } from './type';
 
 // icons
-import { MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
-import Tooltip from "../Tooltip";
+import { MinusSmallIcon, PlusSmallIcon } from '@heroicons/react/24/outline';
+import Tooltip from '../Tooltip';
 
 // constants
-import { IMAGE_URL } from "../../../constants";
+import { IMAGE_URL } from '../../../constants';
 
 // ::
-const CardMovie = ({
-  disabled,
-  handleClick,
-  title,
-  image,
-}: TCardMovieProps) => {
+const CardMovie = ({ selected, title, image, onAddMovie, onDeleteMovie }: TCardMovieProps) => {
   return (
-    <div className="group relative flex h-44 w-36 shadow-md">
-      {handleClick && (
-        <button
-          onClick={() => handleClick()}
-          className="absolute -top-2 -right-2 flex h-7 w-7 items-center justify-center rounded-full border border-primary-light-contrast bg-primary text-white shadow-lg"
-        >
-          {disabled ? (
-            <MinusSmallIcon className="h-5 w-5" />
-          ) : (
-            <PlusSmallIcon className="h-5 w-5" />
-          )}
-        </button>
+    <div className="relative flex h-44 w-36 shadow-md">
+      {onAddMovie && onDeleteMovie && (
+
+      <button
+        onClick={selected ? onDeleteMovie : onAddMovie}
+        className="absolute -top-2 -right-2 flex h-7 w-7 items-center justify-center rounded-full border border-primary-light-contrast bg-primary text-white shadow-lg"
+      >
+        {selected ? <MinusSmallIcon className="h-5 w-5" /> : <PlusSmallIcon className="h-5 w-5" />}
+      </button>
       )}
       <Tooltip message={title}>
         {image ? (

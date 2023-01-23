@@ -1,13 +1,13 @@
-import { forwardRef } from "react";
+import { forwardRef } from 'react';
 
 // icons
-import { CheckIcon } from "@heroicons/react/24/outline";
+import { CheckIcon } from '@heroicons/react/24/outline';
 
 // components
-import Tooltip from "../Tooltip";
+import Tooltip from '../Tooltip';
 
 // types
-import type { TButtonDoneProps } from "./types";
+import type { TButtonDoneProps } from './types';
 
 // ::
 const ButtonDone = forwardRef<HTMLButtonElement, TButtonDoneProps>(
