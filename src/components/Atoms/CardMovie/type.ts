@@ -1,6 +1,9 @@
+
 export type TCardMovieProps = {
-  title: string,
-  disabled?: boolean,
-  image?: string,
-  handleClick?: () => void,
-}
+  title: string;
+  selected?: boolean;
+  image?: string;
+  handleClick?: () => void;
+  onAddMovie?: () => void;
+  onDeleteMovie?: () => void;
+};

@@ -1,9 +1,9 @@
-import { type ReactNode, type Dispatch, type SetStateAction } from "react";
+import { type ReactNode } from 'react';
 
 export type TSidebarProps = {
   triggerComponent: ReactNode;
   children: ReactNode;
-  handleSubmit: () => void;
-  setSideBarOpen: Dispatch<SetStateAction<boolean>>;
-  open: boolean;
+  onSubmitList: () => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };

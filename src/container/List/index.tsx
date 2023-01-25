@@ -1,6 +1,5 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { useRecoilState, useResetRecoilState } from 'recoil';
 
 // components
 import {
@@ -19,9 +18,6 @@ import {
 import type { TTmdbMoviesAndTvResult } from '../../interfaces/api';
 import type { TContainerListProps } from './type';
 
-// recoil: atoms
-import { atomUserCreateList } from '../../recoil/atoms';
-
 // utils
 import { removeListItem } from '../../utils/removeListItem';
 
@@ -37,17 +33,17 @@ import {
   useCreateUserListMutation,
   useEditUserListMutation,
   useGetListQuery,
-  useUserListsQuery,
   useGetTmdbByQueryQuery,
 } from '../../queries';
 import { useQueryClient } from '@tanstack/react-query';
+import { TEndpointUserLists } from '../../interfaces';
 
 // ::
 const ContainerList = ({ type }: TContainerListProps) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const notify = usePushNotification();
-  const clientQuery = useQueryClient();
+  const queryClient = useQueryClient();
 
   // queries and mutations
   const sendCreateList = useCreateUserListMutation();
@@ -57,21 +53,31 @@ const ContainerList = ({ type }: TContainerListProps) => {
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
   const [sendError, setSendError] = useState(false);
-  const [sideBarOpen, setSideBarOpen] = useState(false);
   const [feedBack, setFeedback] = useState('');
-  const [listname, setListName] = useState('');
-
-  // recoil: states
-  const [newList, setNewList] = useRecoilState(atomUserCreateList);
-
-  // recoil: resets
-  const resetNewList = useResetRecoilState(atomUserCreateList);
+  const [listname, setListName] = useState<string>(() => {
+    if (type === 'edit') {
+      const userLists = queryClient
+        .getQueryData<TEndpointUserLists[]>(['user_lists'])
+        ?.find((list) => list.id === id);
+      return userLists?.title ?? '';
+    }
+    return '';
+  });
+  const [movies, setMovies] = useState<TTmdbMoviesAndTvResult[]>(() => {
+    if (type === 'edit') {
+      const userLists = queryClient
+        .getQueryData<TEndpointUserLists[]>(['user_lists'])
+        ?.find((list) => list.id === id);
+      return userLists?.list ?? [];
+    }
+    return [];
+  });
 
   const getList = useGetListQuery({
     id,
     onSuccess: (data) => {
       setListName(data.title);
-      setNewList(data.list);
+      setMovies(data.list);
     },
   });
 
@@ -82,70 +88,59 @@ const ContainerList = ({ type }: TContainerListProps) => {
     return sendCreateList?.isLoading || sendEditList?.isLoading || getList.isFetching;
   }, [sendCreateList, sendEditList, getList]);
 
-  const handleClickMovie = (selectedMovie: TTmdbMoviesAndTvResult) => {
-    const isChecked = newList.find((movie) => movie.id === selectedMovie.id);
+  const handleAddMovie = (movie: TTmdbMoviesAndTvResult) => {
+    setMovies((currentMovies) => [...currentMovies, movie]);
+  };
 
-    if (isChecked) {
-      removeListItem({
-        item: selectedMovie,
-        setState: setNewList,
-        state: newList,
-      });
-    } else {
-      setNewList([...newList, selectedMovie]);
-    }
+  const handleDeleteMovie = (movie: TTmdbMoviesAndTvResult) => {
+    removeListItem({ item: movie, setState: setMovies, state: movies });
   };
 
   const handleSubmitList = () => {
-    if (listname && newList.length > 0) {
-      if (type === 'create') {
-        sendCreateList.mutate(
-          {
-            list: newList,
-            title: listname,
-          },
-          {
-            onSuccess: (data) => {
-              clientQuery.invalidateQueries({
-                queryKey: ['user_lists'],
-              });
-              notify({
-                message: `Lista ${data.title} criada com sucesso`,
-                title: 'Sucesso!',
-              });
-              setSideBarOpen(false);
-              resetNewList();
-
-              navigate(`${PATHS.list}/${data.id}`);
-            },
-          }
-        );
-      } else {
-        sendEditList.mutate(
-          {
-            id,
-            list: newList,
-            title: listname,
-          },
-          {
-            onSuccess: (data) => {
-              clientQuery.invalidateQueries({
-                queryKey: ['user_lists'],
-              });
-              notify({
-                message: `Lista ${data.title} editada com sucesso`,
-                title: 'Sucesso!',
-              });
-              setSideBarOpen(false);
-              resetNewList();
-              navigate(`${PATHS.list}/${data.id}`);
-            },
-          }
-        );
-      }
-    } else {
-      setFeedback('Escolha um nome para a lista!');
+    if (!listname || movies.length === 0) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      setFeedback('Escolha um nome para a lista!');
+      return;
+    }
+    if (type === 'create') {
+      sendCreateList.mutate(
+        {
+          title: listname,
+          list: movies,
+        },
+        {
+          onSuccess: (data) => {
+            queryClient.invalidateQueries({
+              queryKey: ['user_lists'],
+            });
+            notify({
+              message: `Lista ${data.title} criada com sucesso`,
+              title: 'Sucesso!',
+            });
+            navigate(`${PATHS.list}/${data.id}`);
+          },
+        }
+      );
+    } else {
+      sendEditList.mutate(
+        {
+          id,
+          list: movies,
+          title: listname,
+        },
+        {
+          onSuccess: (data) => {
+            queryClient.invalidateQueries({
+              queryKey: ['user_lists'],
+            });
+            notify({
+              message: `Lista ${data.title} editada com sucesso`,
+              title: 'Sucesso!',
+            });
+            navigate(`${PATHS.list}/${data.id}`);
+          },
+        }
+      );
     }
   };
 
@@ -163,14 +158,6 @@ const ContainerList = ({ type }: TContainerListProps) => {
     }
   };
 
-  useEffect(() => {
-    resetNewList();
-    () => {
-      resetNewList();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   if (sendError) {
     return (
       <Tapume
@@ -186,14 +173,10 @@ const ContainerList = ({ type }: TContainerListProps) => {
     <div className="container mx-auto flex h-full flex-col items-center justify-center px-4">
       <BackdropLoader open={isLoadingScreen} />
       <Sidebar
-        handleSubmit={() => handleSubmitList()}
-        open={sideBarOpen}
-        setSideBarOpen={setSideBarOpen}
-        triggerComponent={
-          <ButtonDone onClick={() => setSideBarOpen(true)} counter={newList.length} />
-        }
+        onSubmitList={handleSubmitList}
+        triggerComponent={<ButtonDone counter={movies.length} />}
       >
-        <MovieList list={newList} />
+        <MovieList list={movies} onDeleteMovie={handleDeleteMovie} />
       </Sidebar>
       <div className="flex w-full max-w-5xl flex-col gap-5">
         <input
@@ -206,6 +189,7 @@ const ContainerList = ({ type }: TContainerListProps) => {
         {feedBack && <p className="text-xl font-bold text-feedback-error">{feedBack}</p>}
         <div className="flex items-start gap-2">
           <Input
+            type="search"
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Procure por séries ou filmes"
           />
@@ -217,10 +201,11 @@ const ContainerList = ({ type }: TContainerListProps) => {
           {getByQuery.data?.results?.map((movie) => (
             <CardMovie
               key={movie.id}
-              disabled={!!newList?.find((item) => item.id === movie.id)}
+              selected={!!movies?.find((item) => item.id === movie.id)}
               title={`${movie.title || movie.name}`}
               image={movie.poster_path}
-              handleClick={() => handleClickMovie(movie)}
+              onAddMovie={() => handleAddMovie(movie)}
+              onDeleteMovie={() => handleDeleteMovie(movie)}
             />
           ))}
         </div>
@@ -232,10 +217,11 @@ const ContainerList = ({ type }: TContainerListProps) => {
             {getList?.data?.list?.map((movie) => (
               <CardMovie
                 key={movie.id}
-                disabled={!!newList?.find((item) => item.id === movie.id)}
+                selected={!!movies?.find((item) => item.id === movie.id)}
                 title={`${movie.title || movie.name}`}
                 image={movie.poster_path}
-                handleClick={() => handleClickMovie(movie)}
+                onAddMovie={() => handleAddMovie(movie)}
+                onDeleteMovie={() => handleDeleteMovie(movie)}
               />
             ))}
           </Card>

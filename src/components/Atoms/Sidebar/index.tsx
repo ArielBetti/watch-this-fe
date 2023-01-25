@@ -14,12 +14,12 @@ import { TSidebarProps } from './types';
 const Sidebar = ({
   children,
   triggerComponent,
-  handleSubmit,
+  onSubmitList,
   open,
-  setSideBarOpen,
+  onOpenChange,
 }: TSidebarProps) => {
   return (
-    <Dialog.Root open={open} onOpenChange={setSideBarOpen}>
+    <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Trigger asChild>{triggerComponent}</Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-slate-900/80 motion-safe:animate-blurIn" />
@@ -29,7 +29,7 @@ const Sidebar = ({
               <XMarkIcon className="h-5 w-5" />
             </Dialog.Close>
             <Dialog.Close asChild className="flex">
-              <Button onClick={handleSubmit}>Confirmar</Button>
+              <Button onClick={onSubmitList}>Confirmar</Button>
             </Dialog.Close>
           </div>
           <ScrollArea>

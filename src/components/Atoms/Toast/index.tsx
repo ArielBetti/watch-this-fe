@@ -47,13 +47,10 @@ const Toast = () => {
             </RadixToast.Title>
             <div className="flex items-center justify-center">
               <RadixToast.Action
-                asChild
                 altText="undo"
                 className="rounded-sm hover:shadow-sm transition-colors hover:bg-primary"
               >
-                <button>
                   <XMarkIcon className="h-5 w-5" />
-                </button>
               </RadixToast.Action>
             </div>
           </div>
